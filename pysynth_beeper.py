@@ -41,19 +41,14 @@ def make_wav(song, tempo=120, transpose=0, fn="out.wav"):
     def sixteenbit(sample):
         return struct.pack('h', round(32000 * sample))
 
-    def beep(freq, duration, sink):
-        asin = lambda x: math.sin(2. * math.pi * x)
     
-        ow = ""
-        period = SAMPLING_RATE / 4 / freq
-        for x in xrange(duration):
-            fade_multiplier = 1
-            distance_from_border = min(x, duration - x)
-            if distance_from_border < 100:
-                fade_multiplier = distance_from_border / 100.0 
-                 
+    def beep_single_period(period):
+        asin = lambda x: math.sin(2. * math.pi * x)
+        
+        period_waveform = []
+        for x in xrange(period):
             # Position inside current period, 0..1            
-            pos = float((x % period)) / period
+            pos = float(x) / period
             
             # Synth 1, using sine waves
             level1 = (asin(pos) + asin(pos * 2)) / 2
@@ -66,8 +61,36 @@ def make_wav(song, tempo=120, transpose=0, fn="out.wav"):
                     break
             
             # Put both samples together, apply fadein/fadeout
-            level = ((level1 + level2) / 2) * fade_multiplier
-            ow = ow + sixteenbit(level)
+            level = (level1 + level2) / 2
+            period_waveform.append(level)
+            #period_waveform_packed.append(sixteenbit(level))    
+    
+        return period_waveform, "".join(sixteenbit(l) for l in period_waveform)
+    
+    def beep(freq, duration, sink):
+        ow = ""
+
+        period = int(SAMPLING_RATE / 4 / freq)
+        period_waveform, period_waveform_packed = beep_single_period(period)
+
+        x = 0 
+        while x < duration:
+            if x < 100 or duration - x < 100:
+                # At borders we do fade in and fade out
+                fade_multiplier = min(x, duration - x) / 100.0
+                ow += sixteenbit(period_waveform[x % period] * fade_multiplier)
+                x += 1
+            else:
+                if x % period == 0:
+                    # Optimization:
+                    # We're aligned with waveform, can fill ow in batches!
+                    while x + period + 100 < duration:
+                        ow += period_waveform_packed
+                        x += period
+
+                # Go sample-by-sample
+                ow += sixteenbit(period_waveform[x % period])
+                x += 1
 
         sink.writeframesraw(ow)
 
