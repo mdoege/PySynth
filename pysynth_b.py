@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: latin-1 -*-
 
-print "*** EXPERIMENTAL PIANO VERSION WITH NOTE CACHING ***"
+#print "*** EXPERIMENTAL PIANO VERSION WITH NOTE CACHING ***"
 
 """
 ##########################################################################
@@ -196,7 +196,7 @@ data = []
 note_cache = {}
 cache_this = {}
 
-def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav"):
+def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav", silent=False):
 	f=wave.open(fn,'w')
 
 	f.setnchannels(1)
@@ -279,7 +279,7 @@ def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav
 
 	for rp in range(repeat+1):
 		for nn, x in enumerate(song):
-		    if not nn % 4:
+		    if not nn % 4 and silent == False:
 		        print "[%u/%u]\t" % (nn+1,len(song))
 		    if x[0]!='r':
 		        if x[0][-1] == '*':
@@ -308,7 +308,8 @@ def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav
 	##########################################################################
 	# Write to output file (in WAV format)
 	##########################################################################
-	print "Writing to file", fn
+	if silent == False:
+		print "Writing to file", fn
 
 	data = data / (data.max() * 2.)
 	out_len = int(2. * 44100. + ex_pos+.5)
@@ -352,6 +353,7 @@ def mix_files(a, b, c, chann = 2, phase = -1.):
 ##########################################################################
 
 if __name__ == '__main__':
+	print "*** EXPERIMENTAL PIANO VERSION WITH NOTE CACHING ***"
 	print
 	print "Creating Demo Songs... (this might take about a minute)"
 	print
