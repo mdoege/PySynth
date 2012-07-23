@@ -19,7 +19,7 @@ usageHelp = "Notes are 'a' through 'g' of course,\noptionally with '#' or 'b' ap
 
 warningStr = "Improper Syntax - Type 'help' to see usage."
 
-invalidCmd = "Non-existential command."
+invalidCmd = "Command does not exist."
 
 invalidOption = "Invalid Option."
 
@@ -30,6 +30,7 @@ class mEnv:
 	repeatVal = 0
 	inputEntered = False
 	instrument = ''
+	outFile = ''
 	trashFile = True 
 	def __init__(self):
 		''' Constructor class. '''
@@ -41,11 +42,11 @@ class mEnv:
 		
 		# Different cases of input, when optional argument 'sound' is given.
 		if self.instrument == 'a' or self.instrument == '':
-			self.synthSounds(pysynth)
+			self.synthSounds(pysynth, self.outFile)
 		elif self.instrument == 'b':
-			self.synthSounds(pysynth_b)
+			self.synthSounds(pysynth_b, self.outFile)
 		elif self.instrument == 's':
-			self.synthSounds(pysynth_s)
+			self.synthSounds(pysynth_s, self.outFile)
 		else:
 			print invalidOption
 			mEnv()
@@ -64,7 +65,7 @@ class mEnv:
 		# List with whitespace as delimiter.
 		cliInput = cliInput.split()
 		self.synthParam = []
-		
+					
 		for comp in cliInput:
 			# Optional arguments.
 			if comp.startswith('--'):
@@ -90,10 +91,12 @@ class mEnv:
 						mEnv()
 				elif comp[0] == 'save':
 					try:
+						self.outFile = str(comp[1])# + '.wav'
 						self.trashFile = False
 					except IndexError:
 						print warningStr
 						mEnv()
+
 				continue
 
 			# Notes and beats.
@@ -109,11 +112,14 @@ class mEnv:
 					break
 				i += 1
 
-	def play(self):
+	def play(self, outFile):
 		''' Open the .wav file and play it.'''
+		
+		if outFile == '':
+			outFile = 'temp.wav'
 
 		chunk = 1024
-		wf = wave.open('temp.wav', 'rb')
+		wf = wave.open(outFile, 'rb')
 		p = pyaudio.PyAudio()
 
 		# open stream
@@ -136,25 +142,31 @@ class mEnv:
 
 		p.terminate()
 	
-	def removeFile(self):
+	def removeFile(self, outFile):
 		''' Delete the .wav file.'''
-		
-		if self.trashFile:
-			os.remove('temp.wav')
+	   	
+		if outFile == '':
+			outFile = 'temp.wav'
 
-	def synthSounds(self, renderSound):
+		if self.trashFile:
+			os.remove(outFile)
+
+	def synthSounds(self, renderSound, outFile):
 		''' Render sound with pysynth_a, pysynth_b or pysynth_s based on user preference.'''
+		
+		if outFile == '':
+			outFile = 'temp.wav'
 
 		try:
 			# Different cases of input, when optional arguments 'bpm' and 'repeat' are given.
 			if self.bpmVal and self.repeatVal:
-				renderSound.make_wav(self.synthParam, fn = 'temp.wav', silent = True, bpm = self.bpmVal, repeat = self.repeatVal)
+				renderSound.make_wav(self.synthParam, fn = outFile, silent = True, bpm = self.bpmVal, repeat = self.repeatVal)
 			elif self.bpmVal:
-				renderSound.make_wav(self.synthParam, fn = 'temp.wav', silent = True, bpm = self.bpmVal)
+				renderSound.make_wav(self.synthParam, fn = outFile, silent = True, bpm = self.bpmVal)
 			elif self.repeatVal:
-				renderSound.make_wav(self.synthParam, fn = 'temp.wav', silent = True, repeat = self.repeatVal)
+				renderSound.make_wav(self.synthParam, fn = outFile, silent = True, repeat = self.repeatVal)
 			else:
-				renderSound.make_wav(self.synthParam, fn = 'temp.wav', silent = True)
+				renderSound.make_wav(self.synthParam, fn = outFile, silent = True)
 		except KeyError:
 			print warningStr 
 			mEnv()
@@ -169,8 +181,8 @@ if __name__ == "__main__":
 	while True:
 		a = mEnv()
 		try:
-			a.play()
+			a.play(a.outFile)
 		except:
 			a.trashFile = False
 			print 'Could not play file. Saved to temp.wav'
-		a.removeFile()
+		a.removeFile(a.outFile)
