@@ -30,6 +30,7 @@ class mEnv:
 	repeatVal = 0
 	inputEntered = False
 	instrument = ''
+	trashFile = True 
 	def __init__(self):
 		''' Constructor class. '''
 
@@ -37,7 +38,7 @@ class mEnv:
 		cliInput = raw_input(">>> ")
 
 		self.parse(cliInput)
-
+		
 		# Different cases of input, when optional argument 'sound' is given.
 		if self.instrument == 'a' or self.instrument == '':
 			self.synthSounds(pysynth)
@@ -75,15 +76,21 @@ class mEnv:
 					except IndexError:
 						print warningStr
 						mEnv()
-				if comp[0] == 'repeat':
+				elif comp[0] == 'repeat':
 					try:
 						self.repeatVal = int(comp[1]) - 1
 					except IndexError:
 						print warningStr
 						mEnv()
-				if comp[0] == 'sound':
+				elif comp[0] == 'sound':
 					try:
 						self.instrument = str(comp[1])
+					except IndexError:
+						print warningStr
+						mEnv()
+				elif comp[0] == 'save':
+					try:
+						self.trashFile = False
 					except IndexError:
 						print warningStr
 						mEnv()
@@ -132,7 +139,8 @@ class mEnv:
 	def removeFile(self):
 		''' Delete the .wav file.'''
 		
-		os.remove('temp.wav')
+		if self.trashFile:
+			os.remove('temp.wav')
 
 	def synthSounds(self, renderSound):
 		''' Render sound with pysynth_a, pysynth_b or pysynth_s based on user preference.'''
@@ -160,5 +168,9 @@ if __name__ == "__main__":
 	# Interpreter loop.
 	while True:
 		a = mEnv()
-		a.play()
+		try:
+			a.play()
+		except:
+			a.trashFile = False
+			print 'Could not play file. Saved to temp.wav'
 		a.removeFile()
