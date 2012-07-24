@@ -5,15 +5,15 @@ Python Command Line Musical Interpreter for PySynth.
 Pranav Ravichandran (me@onloop.net)
 """
 
+import play_wav
 import pysynth, pysynth_b, pysynth_s
-from pyaudio import pyaudio
 import wave
 import sys
 import os
 import string
 
 #Type 'help' to access.
-helpContent = "------------------------------\nPySynth musical note interpreter.\nUsage: <Duration><Note> <Duration2><Note2> .... <DurationN><NoteN>\nOptional arguments:\n\t--bpm=Beats per minute [Default:120]\n\t--repeat=Number of bars [Default:1]\n\t--sound=Instrument [a = Flute/Organ, b = piano, s = plucked string, Default = a]\nSample: 1d 2c 4f --bpm=150 --repeat=2 --sound=s\nCommands: 'exit' and 'help'\n------------------------------"
+helpContent = "------------------------------\nPySynth musical note interpreter.\nUsage: <Duration><Note> <Duration2><Note2> .... <DurationN><NoteN>\nOptional arguments:\n\t--bpm=Beats per minute [Default:120]\n\t--repeat=Number of bars [Default:1]\n\t--sound=Instrument [a = Flute/Organ, b = piano, s = plucked string, Default = a]\n\t--save=filename (Filename to save the file to. Appends .wav to filename)\nSample: 1d 2c 4f --bpm=150 --repeat=2 --sound=s --save=foo\nCommands: 'exit' and 'help'\n------------------------------"
 
 usageHelp = "Notes are 'a' through 'g' of course,\noptionally with '#' or 'b' appended for sharps or flats.\nFinally the octave number (defaults to octave 4 if not given).\nAn asterisk at the end makes the note a little louder (useful for the beat).\n'r' is a rest.\n\nNote value is a number:\n1=Whole Note; 2=Half Note; 4=Quarter Note, etc.\nDotted notes can be written in two ways:\n1.33 = -2 = dotted half\n2.66 = -4 = dotted quarter\n5.33 = -8 = dotted eighth\n--------------------------------"
 
@@ -31,7 +31,7 @@ class mEnv:
 	inputEntered = False
 	instrument = ''
 	outFile = ''
-	trashFile = True 
+	trashFile = True
 	def __init__(self):
 		''' Constructor class. '''
 
@@ -39,7 +39,7 @@ class mEnv:
 		cliInput = raw_input(">>> ")
 
 		self.parse(cliInput)
-		
+
 		# Different cases of input, when optional argument 'sound' is given.
 		if self.instrument == 'a' or self.instrument == '':
 			self.synthSounds(pysynth, self.outFile)
@@ -65,7 +65,7 @@ class mEnv:
 		# List with whitespace as delimiter.
 		cliInput = cliInput.split()
 		self.synthParam = []
-					
+
 		for comp in cliInput:
 			# Optional arguments.
 			if comp.startswith('--'):
@@ -79,7 +79,7 @@ class mEnv:
 						mEnv()
 				elif comp[0] == 'repeat':
 					try:
-						self.repeatVal = int(comp[1]) - 1
+						self.repeatVal = int(comp[1])
 					except IndexError:
 						print warningStr
 						mEnv()
@@ -91,7 +91,7 @@ class mEnv:
 						mEnv()
 				elif comp[0] == 'save':
 					try:
-						self.outFile = str(comp[1])# + '.wav'
+						self.outFile = str(comp[1]) + '.wav'
 						self.trashFile = False
 					except IndexError:
 						print warningStr
@@ -106,45 +106,24 @@ class mEnv:
 					try:
 						self.synthParam.append((comp[i:], int(comp[:i])))
 					except ValueError:
-						print invalidCmd 
+						print invalidCmd
 						mEnv()
-				
+
 					break
 				i += 1
 
 	def play(self, outFile):
 		''' Open the .wav file and play it.'''
-		
+
 		if outFile == '':
 			outFile = 'temp.wav'
 
-		chunk = 1024
-		wf = wave.open(outFile, 'rb')
-		p = pyaudio.PyAudio()
+		a = play_wav.Sound()
+		a.playFile(outFile)
 
-		# open stream
-		stream = p.open(format =
-	         		p.get_format_from_width(wf.getsampwidth()),
-        		        channels = wf.getnchannels(),
-		                rate = wf.getframerate(),
-		                output = True)
-
-		# read data
-		data = wf.readframes(chunk)
-
-		# play stream
-		while data != '':
-		    stream.write(data)
-		    data = wf.readframes(chunk)
-
-		stream.stop_stream()
-		stream.close()
-
-		p.terminate()
-	
 	def removeFile(self, outFile):
 		''' Delete the .wav file.'''
-	   	
+
 		if outFile == '':
 			outFile = 'temp.wav'
 
@@ -153,7 +132,7 @@ class mEnv:
 
 	def synthSounds(self, renderSound, outFile):
 		''' Render sound with pysynth_a, pysynth_b or pysynth_s based on user preference.'''
-		
+
 		if outFile == '':
 			outFile = 'temp.wav'
 
@@ -168,7 +147,7 @@ class mEnv:
 			else:
 				renderSound.make_wav(self.synthParam, fn = outFile, silent = True)
 		except KeyError:
-			print warningStr 
+			print warningStr
 			mEnv()
 
 
@@ -184,5 +163,7 @@ if __name__ == "__main__":
 			a.play(a.outFile)
 		except:
 			a.trashFile = False
-			print 'Could not play file. Saved to temp.wav'
+			if a.outFile == '':
+				a.outFile = 'temp.wav'
+			print 'Could not play file. Saved to ' + a.outFile
 		a.removeFile(a.outFile)
