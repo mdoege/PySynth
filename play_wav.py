@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 
+"""
+Audio playback with pyaudio, tkSnack, pyglet or console media player depending on availability.
+Pranav Ravichandran <me@onloop.net>
+"""
+
 import wave
 import os
 import sys
@@ -87,6 +92,7 @@ class Sound:
 	def play_media(self, mediaFile):
 		''' In absence of audio playback frameworks, just use an OS-based console media player.'''
 
+		# https://github.com/mdoege/NewsFeed/blob/master/newsfeed.py#L49 Thanks for the code, Martin!
 		media_player = os.getenv("MEDIA_PLAYER")
 		if not media_player:
 			if 'freebsd' in sys.platform or 'linux' in sys.platform:
