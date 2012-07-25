@@ -3,18 +3,33 @@
 """
 Parse a file in ABC music notation format and render with PySynth.
 
+Usage:
+
+read_abc.py filename [num_song] [--syn_b/--syn_s]
+
+* num_song selects the song in the file corresponding to the number given
+* --syn_b and --syn_s can be added to use the PySynth B or PySynth S
+    modules, respectively, instead of the default PySynth A
+
 Some of the definitions are borrowed from PlayABC 1.1
 
-2009-06-10
+2012-07-17
 """
 
 import sys, urllib2
-import pysynth
 
 sel = False
 try: num = int(sys.argv[2])
 except: num = 1
 song = []
+
+if "--syn_b" in sys.argv:
+	import pysynth_b as pysynth
+elif "--syn_s" in sys.argv:
+	import pysynth_s as pysynth
+else:
+	import pysynth
+
 
 # flatten or sharpen notes according to key signature
 # key_sig is in range [-7 .. + 7] meaning that many
