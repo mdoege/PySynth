@@ -87,6 +87,7 @@ class Sound:
 
 		stream = pyglet.resource.media(mediaFile)
 		stream.play()
+		pyglet.clock.schedule_once(pyglet.app.exit(), stream.duration)
 		pyglet.app.run()
 
 	def play_media(self, mediaFile):
