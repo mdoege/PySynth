@@ -15,7 +15,7 @@ tkSnackFound = False
 pygletFound = False
 
 try:
-	from pyaudio import pyaudio
+	import pyaudio
 	pyaudioFound = True
 except ImportError:
 	try:
@@ -67,8 +67,8 @@ class Sound:
 
 		# play stream
 		while data != '':
-		    stream.write(data)
-		    data = wf.readframes(chunk)
+			stream.write(data)
+			data = wf.readframes(chunk)
 
 		stream.stop_stream()
 		stream.close()
