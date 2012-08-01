@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name="PySynth",
-        version="1.0",
+        version="1.0.1",
         description="A simple music synthesizer for Python",
         author="Martin C. Doege",
         author_email="mdoege@compuserve.com",
