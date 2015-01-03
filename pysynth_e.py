@@ -234,7 +234,7 @@ def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav
 	    lf = log(a)
 	    snd_len = max(int(3.1*q), 44100)
 
-	    raw_note = 8*44100
+	    raw_note = 12*44100
 	    if note not in note_cache.keys():
 	        x2 = np.arange(raw_note)
 	    	sina = 2. * pi * x2 / float(l[0])
@@ -245,9 +245,6 @@ def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav
 	    	zz(amp1)
 	    	zz(amp2)
 	    	zz(amp_3to6)
-	    	print amp1.min(),amp1.max()
-	    	print amp2.min(),amp2.max()
-	    	print amp_3to6.min(),amp_3to6.max()
 	   	new = (
 			amp1 * np.sin(sina+.58*amp2*np.sin(sina14))
 	              + amp_3to6 * np.sin(sina+.89*amp_3to6*np.sin(sina))
