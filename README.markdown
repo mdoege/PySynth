@@ -37,11 +37,11 @@ More advanced usage:
 import pysynth_b as psb # a, b, e, and s variants available
 
 ''' (note, duration)
-Note name (a to g), then optionally a '#' for sharp,
-then optionally the octave (defaults to 4). An asterisk
-at the end means to play the note a little louder.
-4 is a quarter note, -4 is a dotted quarter note, 
-etc for duration.'''
+Note name (a to g), then optionally a '#' for sharp or
+'b' for flat, then optionally the octave (defaults to 4).
+An asterisk at the end means to play the note a little 
+louder.  Duration: 4 is a quarter note, -4 is a dotted 
+quarter note, etc.'''
 song = (
   ('c', 4), ('c*', 4), ('eb', 4), 
   ('g#', 4),  ('g*', 2), ('g5', 4),
