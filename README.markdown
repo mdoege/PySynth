@@ -8,6 +8,7 @@ The current release of the synthesizer can only play one note at a time. (Althou
 
 ## Installation
 
+### Linux
 Clone the repository:
 
 `git clone git@github.com:mdoege/PySynth.git`
@@ -24,34 +25,37 @@ Enter the directory (`cd PySynth`) and run
 
 Basic usage:
 
-`import pysynth as ps
-test = (('c', 4), ('e', 4), ('g', 4), ('c5', 1))
-pysynth.make_wav(test, fn = "test.wav")`
+```python
+import pysynth as ps
+test = (('c', 4), ('e', 4), ('g', 4),
+		('c5', -2), ('e6', 8), ('d#6', 2))
+ps.make_wav(test, fn = "test.wav")```
 
 More advanced usage:
 
-`import pysynth_b as psb # a, b, e, and s variants available
+```python
+import pysynth_b as psb # a, b, e, and s variants available
 
-''' Note name (a to g), then optionally a '#' for sharp, then optionally the octave (defaults to 4). An asterisk at the end means to play the note a little louder.'''
+''' (note, duration)
+Note name (a to g), then optionally a '#' for sharp,
+then optionally the octave (defaults to 4). An asterisk
+at the end means to play the note a little louder.
+4 is a quarter note, -4 is a dotted quarter note, 
+etc for duration.'''
 song = (
-  ('c', 4), ('c\*', 4), ('e', 4), 
-  ('g#', 4),  ('g\*', 2), ('g5', 4),
-  ('g5\*', 4), ('r', 4), ('e5', 16),
+  ('c', 4), ('c*', 4), ('eb', 4), 
+  ('g#', 4),  ('g*', 2), ('g5', 4),
+  ('g5*', 4), ('r', 4), ('e5', 16),
   ('f5', 16),  ('e5', 16),  ('d5', 16),
-  ('e5\*', 4) 
-)`
+  ('e5*', 4) 
+)
 
 # Beats per minute (bpm) is really quarters per minute here
-psb.make_wav(song, fn = "danube.wav", leg_stac = .7, bpm = 180)`
+psb.make_wav(song, fn = "danube.wav", leg_stac = .7, bpm = 180)```
 
 Read ABC file and output WAV:
 
     python read_abc.py straw.abc
-
-As a module from the Python interpreter:
-
-    from pysynth_b import *
-    make_wav(song, fn = "danube.wav", leg_stac = .7, bpm = 180)
 
 ## Documentation
 
@@ -59,3 +63,7 @@ More documentation and examples at the [PySynth homepage][1].
 
 [1]: http://mdoege.github.io/PySynth/
 [2]: http://numpy.scipy.org/
+
+## Current limitations
+
+Flats and sharps do not work in cases such as e-sharp or c-flat.
