@@ -258,7 +258,7 @@ def get_bpm(s, u = "1/4"):
 
 fn = sys.argv[1]
 if fn[:5] == 'http:':
-	f = urllib.request.urlopen(fn)
+	f = urllib.request.urlopen(fn).read().decode('utf-8').splitlines(keepends=True)
 else:
 	f = open(fn)
 
@@ -269,7 +269,7 @@ nunit   = "1/4"
 unit    = 4
 
 for l in f:
-	if l[0] in ('w', 'W', '%'): continue
+	if not l or l[0] in ('w', 'W', '%'): continue
 	if 'X:' in l:
 		sn = int(l.split(':')[1])
 		if sn == num:
@@ -311,7 +311,6 @@ for l in f:
 
 if do_repeat:
 	song = song + second_ver
-f.close()
 
 if not sel:
 	print()
