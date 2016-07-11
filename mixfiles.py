@@ -21,9 +21,9 @@ def mix_files(a, b, c, chann = 2, phase = -1.):
 	for n in range(frames):
 		if not n%(5*44100): print(n // 44100, 's')
 		if chann < 2:
-			d3 = struct.pack('h',
+			d3 = struct.pack('h', int(
 				.5 * (struct.unpack('h', d1[2*n:2*n+2])[0] +
-				struct.unpack('h', d2[2*n:2*n+2])[0]))
+				struct.unpack('h', d2[2*n:2*n+2])[0])))
 		else:
 			d3 = ( struct.pack('h', int(
 				phase * .3 * struct.unpack('h', d1[2*n:2*n+2])[0] +
