@@ -55,7 +55,7 @@ psb.make_wav(song, fn = "danube.wav", leg_stac = .7, bpm = 180)```
 
 Read ABC file and output WAV:
 
-    python read_abc.py straw.abc
+`python read_abc.py straw.abc`
 
 ## Documentation
 
