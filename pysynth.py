@@ -134,6 +134,7 @@ harm_max = 4.
 ##########################################################################
 
 import wave, math, struct
+from mixfiles import mix_files
 
 def make_wav(song,bpm=120,transpose=0,pause=.05,boost=1.1,repeat=0,fn="out.wav", silent=False):
 	f=wave.open(fn,'w')
@@ -229,35 +230,6 @@ def make_wav(song,bpm=120,transpose=0,pause=.05,boost=1.1,repeat=0,fn="out.wav",
 	f.close()
 	print()
 
-def mix_files(a, b, c, chann = 2, phase = -1.):
-	f1 = wave.open(a,'r')
-	f2 = wave.open(b,'r')
-	f3 = wave.open(c,'w')
-	f3.setnchannels(chann)
-	f3.setsampwidth(2)
-	f3.setframerate(44100)
-	f3.setcomptype('NONE','Not Compressed')
-	frames = min(f1.getnframes(), f2.getnframes())
-
-	print("Mixing files, total length %.2f s..." % (frames / 44100.))
-	d1 = f1.readframes(frames)
-	d2 = f2.readframes(frames)
-	for n in range(frames):
-		if not n%(5*44100): print(n // 44100, 's')
-		if chann < 2:
-			d3 = struct.pack('h',
-				.5 * (struct.unpack('h', d1[2*n:2*n+2])[0] +
-				struct.unpack('h', d2[2*n:2*n+2])[0]))
-		else:
-			d3 = ( struct.pack('h',
-				phase * .3 * struct.unpack('h', d1[2*n:2*n+2])[0] +
-				.7 * struct.unpack('h', d2[2*n:2*n+2])[0]) +
-				struct.pack('h',
-				.7 * struct.unpack('h', d1[2*n:2*n+2])[0] +
-				phase * .3 * struct.unpack('h', d2[2*n:2*n+2])[0]) )
-		f3.writeframesraw(d3)
-	f3.close()
-
 ##########################################################################
 # Synthesize demo songs
 ##########################################################################
@@ -266,20 +238,5 @@ if __name__ == '__main__':
 	print()
 	print("Creating Demo Songs... (this might take about a minute)")
 	print()
-
-	# SONG 1
-	make_wav(song1, fn = "pysynth_scale.wav")
-
-	# SONG 2
-	make_wav(song2, bpm = 95, boost = 1.2, fn = "pysynth_anthem.wav")
-
-	# SONG 3
-	make_wav(song3, bpm = 132/2, pause = 0., boost = 1.1, fn = "pysynth_chopin.wav")
-
-	# SONG 4
-	#   right hand part
-	make_wav(song4_rh, bpm = 130, transpose = 1, pause = .1, boost = 1.15, repeat = 1, fn = "pysynth_bach_rh.wav")
-	#   left hand part
-	make_wav(song4_lh, bpm = 130, transpose = 1, pause = .1, boost = 1.15, repeat = 1, fn = "pysynth_bach_lh.wav")
 	#   mix both files together
 	mix_files("pysynth_bach_rh.wav", "pysynth_bach_lh.wav", "pysynth_bach.wav")

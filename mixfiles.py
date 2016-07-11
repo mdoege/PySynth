@@ -6,13 +6,13 @@
 import sys, wave, struct
 
 def mix_files(a, b, c, chann = 2, phase = -1.):
-	f1 = wave.open(a,'r')
-	f2 = wave.open(b,'r')
-	f3 = wave.open(c,'w')
+	f1 = wave.open(a, 'r')
+	f2 = wave.open(b, 'r')
+	f3 = wave.open(c, 'w')
 	f3.setnchannels(chann)
 	f3.setsampwidth(2)
 	f3.setframerate(44100)
-	f3.setcomptype('NONE','Not Compressed')
+	f3.setcomptype('NONE', 'Not Compressed')
 	frames = min(f1.getnframes(), f2.getnframes())
 
 	print("Mixing files, total length %.2f s..." % (frames / 44100.))
@@ -25,12 +25,12 @@ def mix_files(a, b, c, chann = 2, phase = -1.):
 				.5 * (struct.unpack('h', d1[2*n:2*n+2])[0] +
 				struct.unpack('h', d2[2*n:2*n+2])[0]))
 		else:
-			d3 = ( struct.pack('h',
+			d3 = ( struct.pack('h', int(
 				phase * .3 * struct.unpack('h', d1[2*n:2*n+2])[0] +
-				.7 * struct.unpack('h', d2[2*n:2*n+2])[0]) +
-				struct.pack('h',
+				.7 * struct.unpack('h', d2[2*n:2*n+2])[0])) +
+				struct.pack('h', int(
 				.7 * struct.unpack('h', d1[2*n:2*n+2])[0] +
-				phase * .3 * struct.unpack('h', d2[2*n:2*n+2])[0]) )
+				phase * .3 * struct.unpack('h', d2[2*n:2*n+2])[0])) )
 		f3.writeframesraw(d3)
 	f3.close()
 
