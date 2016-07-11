@@ -235,7 +235,7 @@ def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav
 	    snd_len = max(int(3.1*q), 44100)
 
 	    raw_note = 12*44100
-	    if note not in note_cache.keys():
+	    if note not in list(note_cache.keys()):
 	        x2 = np.arange(raw_note)
 	    	sina = 2. * pi * x2 / float(l[0])
 	    	sina14 = 14. * 2. * pi * x2 / float(l[0])
@@ -279,7 +279,7 @@ def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav
 	for rp in range(repeat+1):
 		for nn, x in enumerate(song):
 		    if not nn % 4 and silent == False:
-		        print "[%u/%u]\t" % (nn+1,len(song))
+		        print("[%u/%u]\t" % (nn+1,len(song)))
 		    if x[0]!='r':
 		        if x[0][-1] == '*':
 		            vol = boost
@@ -308,7 +308,7 @@ def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav
 	# Write to output file (in WAV format)
 	##########################################################################
 	if silent == False:
-		print "Writing to file", fn
+		print("Writing to file", fn)
 
 	data = data / (data.max() * 2.)
 	out_len = int(2. * 44100. + ex_pos+.5)
@@ -316,7 +316,7 @@ def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav
 	data2[:] = 32000. * data[:out_len]
 	f.writeframes(data2.tostring())
 	f.close()
-	print
+	print()
 
 def mix_files(a, b, c, chann = 2, phase = -1.):
 	f1 = wave.open(a,'r')
@@ -328,11 +328,11 @@ def mix_files(a, b, c, chann = 2, phase = -1.):
 	f3.setcomptype('NONE','Not Compressed')
 	frames = min(f1.getnframes(), f2.getnframes())
 
-	print "Mixing files, total length %.2f s..." % (frames / 44100.)
+	print("Mixing files, total length %.2f s..." % (frames / 44100.))
 	d1 = f1.readframes(frames)
 	d2 = f2.readframes(frames)
 	for n in range(frames):
-		if not n%(5*44100): print n // 44100, 's'
+		if not n%(5*44100): print(n // 44100, 's')
 		if chann < 2:
 			d3 = struct.pack('h',
 				.5 * (struct.unpack('h', d1[2*n:2*n+2])[0] +
@@ -352,10 +352,10 @@ def mix_files(a, b, c, chann = 2, phase = -1.):
 ##########################################################################
 
 if __name__ == '__main__':
-	print "*** FM PIANO VERSION WITH NOTE CACHING ***"
-	print
-	print "Creating Demo Songs... (this might take about a minute)"
-	print
+	print("*** FM PIANO VERSION WITH NOTE CACHING ***")
+	print()
+	print("Creating Demo Songs... (this might take about a minute)")
+	print()
 
 	#make_wav((('c', 4), ('e', 4), ('g', 4), ('c5', 1)))
 	#make_wav(song1, fn = "pysynth_scale.wav")

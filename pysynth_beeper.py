@@ -46,7 +46,7 @@ def make_wav(song, tempo=120, transpose=0, fn="out.wav"):
         asin = lambda x: math.sin(2. * math.pi * x)
         
         period_waveform = []
-        for x in xrange(period):
+        for x in range(period):
             # Position inside current period, 0..1            
             pos = float(x) / period
             
