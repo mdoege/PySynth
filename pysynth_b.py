@@ -226,40 +226,40 @@ def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav
 		decay[n] = exp(linint(( (0,log(3)), (3,log(5)), (5, log(1.)), (6, log(.8)), (9,log(.1)) ), n/100.))
 
 	def render2(a, b, vol, pos, knum, note):
-	    l=waves2(a, b)
-	    q=int(l[0]*l[1])
+		l=waves2(a, b)
+		q=int(l[0]*l[1])
 
-	    lf = log(a)
-	    t = (lf-3.) / (8.5-3.)
-	    volfac = 1. + .8 * t * cos(pi/5.3*(lf-3.))
-	    schweb = waves2(lf*100., b)[0]
-	    schweb_amp = .05 - (lf-5.) / 100.
-	    att_fac = min(knum / 87. * vol, 1.)
-	    snd_len = max(int(3.1*q), 44100)
-	    fac = np.ones(snd_len)
-	    fac[:att_len] = att_fac * att_treb + (1.-att_fac) * att_bass
+		lf = log(a)
+		t = (lf-3.) / (8.5-3.)
+		volfac = 1. + .8 * t * cos(pi/5.3*(lf-3.))
+		schweb = waves2(lf*100., b)[0]
+		schweb_amp = .05 - (lf-5.) / 100.
+		att_fac = min(knum / 87. * vol, 1.)
+		snd_len = max(int(3.1*q), 44100)
+		fac = np.ones(snd_len)
+		fac[:att_len] = att_fac * att_treb + (1.-att_fac) * att_bass
 
-	    raw_note = 12*44100
-	    if note not in list(note_cache.keys()):
-	        x2 = np.arange(raw_note)
-	    	sina = 2. * pi * x2 / float(l[0])
-		ov = np.exp(-x2/3./decay[int(lf*100)]/44100.)
-	   	new = (( np.sin(sina)
-	              + ov*harmtab[kn,2]*np.sin(2. * sina)
-	              + ov*harmtab[kn,3]*np.sin(3. * sina)
-	              + ov*harmtab[kn,4]*np.sin(4. * sina)
-	              + ov*harmtab[kn,5]*np.sin(8. * sina)
-			) * volfac )
-		new *= np.exp(-x2/decay[int(lf*100)]/44100.)
-		if cache_this[note] > 1:
-			note_cache[note] = new.copy()
-			#print "Caching", note
-	    else:
-		new = note_cache[note].copy()
-	    dec_ind = int(leg_stac*q)
-	    new[dec_ind:] *= np.exp(-np.arange(raw_note-dec_ind)/3000.)
-	    #print snd_len, raw_note
-	    data[pos:pos+snd_len] += ( new[:snd_len] * fac * vol *
+		raw_note = 12*44100
+		if note not in list(note_cache.keys()):
+			x2 = np.arange(raw_note)
+			sina = 2. * pi * x2 / float(l[0])
+			ov = np.exp(-x2/3./decay[int(lf*100)]/44100.)
+			new = (( np.sin(sina)
+			      + ov*harmtab[kn,2]*np.sin(2. * sina)
+			      + ov*harmtab[kn,3]*np.sin(3. * sina)
+			      + ov*harmtab[kn,4]*np.sin(4. * sina)
+			      + ov*harmtab[kn,5]*np.sin(8. * sina)
+				) * volfac )
+			new *= np.exp(-x2/decay[int(lf*100)]/44100.)
+			if cache_this[note] > 1:
+				note_cache[note] = new.copy()
+				#print "Caching", note
+		else:
+			new = note_cache[note].copy()
+		dec_ind = int(leg_stac*q)
+		new[dec_ind:] *= np.exp(-np.arange(raw_note-dec_ind)/3000.)
+		#print snd_len, raw_note
+		data[pos:pos+snd_len] += ( new[:snd_len] * fac * vol *
 		       (1. + schweb_amp * np.sin(2. * pi * np.arange(snd_len)/schweb/32.) )  )
 
 	ex_pos = 0.
@@ -275,36 +275,36 @@ def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav
 			y += '4'
 		cache_this[y] = cache_this.get(y, 0) + 1
 	#print "Note frequencies in song:", cache_this
-	data = np.zeros((repeat+1)*t_len + 441000.)
+	data = np.zeros(int((repeat+1)*t_len + 441000))
 	#print len(data)/44100., "s allocated"
 
 	for rp in range(repeat+1):
 		for nn, x in enumerate(song):
-		    if not nn % 4 and silent == False:
-		        print("[%u/%u]\t" % (nn+1,len(song)))
-		    if x[0]!='r':
-		        if x[0][-1] == '*':
-		            vol = boost
-		            note = x[0][:-1]
-		        else:
-		            vol = 1.
-		            note = x[0]
-			if not note[-1].isdigit():
-			    note += '4'		# default to fourth octave
-		        a=pitchhz[note]
-			kn = keynum[note]
-		        a = a * 2**transpose
-		        if x[1] < 0:
-		            b=length(-2.*x[1]/3.)
-		        else:
-		            b=length(x[1])
+			if not nn % 4 and silent == False:
+				print("[%u/%u]\t" % (nn+1,len(song)))
+			if x[0]!='r':
+				if x[0][-1] == '*':
+					vol = boost
+					note = x[0][:-1]
+				else:
+					vol = 1.
+					note = x[0]
+				if not note[-1].isdigit():
+					note += '4'		# default to fourth octave
+				a=pitchhz[note]
+				kn = keynum[note]
+				a = a * 2**transpose
+				if x[1] < 0:
+					b=length(-2.*x[1]/3.)
+				else:
+					b=length(x[1])
 
-		        render2(a, b, vol, int(ex_pos), kn, note)
-			ex_pos = ex_pos + b
+				render2(a, b, vol, int(ex_pos), kn, note)
+				ex_pos = ex_pos + b
 
-		    if x[0]=='r':
-		        b=length(x[1])
-			ex_pos = ex_pos + b
+			if x[0]=='r':
+				b=length(x[1])
+				ex_pos = ex_pos + b
 
 	##########################################################################
 	# Write to output file (in WAV format)

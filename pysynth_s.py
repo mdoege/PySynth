@@ -178,40 +178,40 @@ def make_wav(song,bpm=120,transpose=0,pause=0.,boost=1.1,repeat=0,fn="out.wav",s
 	def asin(x):
 	    return sin(2.*pi*x)
 
-	def render2(a, b, vol, pos, knum, endamp = .25, sm = 10):
-	    b2 = (1. - pause) * b
-	    l=waves2(a, b2)
-	    ow=""
-	    q=int(l[0]*l[1])
+	def render2(a, b, vol, pos, knum, note, endamp = .25, sm = 10):
+		b2 = (1. - pause) * b
+		l=waves2(a, b2)
+		ow=b''
+		q=int(l[0]*l[1])
 
-	    lf = log(a)
-	    t = (lf-3.) / (8.5-3.)
-	    volfac = 1. + .8 * t * cos(pi/5.3*(lf-3.))
-	    snd_len = int((10.-lf)*q)
-	    if lf < 4: snd_len *= 2
-	    x = np.arange(snd_len)
-	    s = x / float(q)
+		lf = log(a)
+		t = (lf-3.) / (8.5-3.)
+		volfac = 1. + .8 * t * cos(pi/5.3*(lf-3.))
+		snd_len = int((10.-lf)*q)
+		if lf < 4: snd_len *= 2
+		x = np.arange(snd_len)
+		s = x / float(q)
 
-	    ls = np.log(1. + s)
-	    kp_len = int(l[0])
-	    kps1 = np.zeros(snd_len)
-	    kps2 = np.zeros(snd_len)
-	    kps1[:kp_len] = np.random.normal(size = kp_len)
+		ls = np.log(1. + s)
+		kp_len = int(l[0])
+		kps1 = np.zeros(snd_len)
+		kps2 = np.zeros(snd_len)
+		kps1[:kp_len] = np.random.normal(size = kp_len)
 
-	    for t in range(kp_len):
-		kps2[t] = kps1[t:t+sm].mean()
-	    delt = float(l[0])
-	    li = int(floor(delt))
-	    hi = int(ceil(delt))
-	    ifac = delt % 1
-	    delt2 = delt * (floor(delt) - 1) / floor(delt)
-	    ifac2 = delt2 % 1
-	    falloff = (4./lf*endamp)**(1./l[1])
-	    for t in range(hi, snd_len):
-		v1 = ifac * kps2[t-hi]   + (1.-ifac) * kps2[t-li]
-		v2 = ifac2 * kps2[t-hi+1] + (1.-ifac2) * kps2[t-li+1]
-	        kps2[t] += .5 * (v1 + v2) * falloff
-	    data[pos:pos+snd_len] += kps2*vol*volfac
+		for t in range(kp_len):
+			kps2[t] = kps1[t:t+sm].mean()
+		delt = float(l[0])
+		li = int(floor(delt))
+		hi = int(ceil(delt))
+		ifac = delt % 1
+		delt2 = delt * (floor(delt) - 1) / floor(delt)
+		ifac2 = delt2 % 1
+		falloff = (4./lf*endamp)**(1./l[1])
+		for t in range(hi, snd_len):
+			v1 = ifac * kps2[t-hi]   + (1.-ifac) * kps2[t-li]
+			v2 = ifac2 * kps2[t-hi+1] + (1.-ifac2) * kps2[t-li+1]
+			kps2[t] += .5 * (v1 + v2) * falloff
+		data[pos:pos+snd_len] += kps2*vol*volfac
 
 	ex_pos = 0.
 	t_len = 0
@@ -220,37 +220,36 @@ def make_wav(song,bpm=120,transpose=0,pause=0.,boost=1.1,repeat=0,fn="out.wav",s
 			t_len+=length(-2.*x/3.)
 		else:
 			t_len+=length(x)
-	data = np.zeros((repeat+1)*t_len + 20. * 44100.)
+	data = np.zeros(int((repeat+1)*t_len + 20 * 44100))
 	#print len(data)/44100., "s allocated"
 
 	for rp in range(repeat+1):
 		for nn, x in enumerate(song):
-		    if not nn % 4 and silent == False:
-		        print("[%u/%u]\t" % (nn+1,len(song)))
-		    if x[0]!='r':
-		        if x[0][-1] == '*':
-		            vol = boost
-		            note = x[0][:-1]
-		        else:
-		            vol = 1.
-		            note = x[0]
-			try:
-		            a=pitchhz[note]
-			    kn = keynum[note]
-			except:
-		            a=pitchhz[note + '4']	# default to fourth octave
-			    kn = keynum[note + '4']
-		        a = a * 2**transpose
-		        if x[1] < 0:
-		            b=length(-2.*x[1]/3.)
-		        else:
-		            b=length(x[1])
-		        render2(a, b, vol, int(ex_pos), kn)
-			ex_pos = ex_pos + b
+			if not nn % 4 and silent == False:
+				print("[%u/%u]\t" % (nn+1,len(song)))
+			if x[0]!='r':
+				if x[0][-1] == '*':
+					vol = boost
+					note = x[0][:-1]
+				else:
+					vol = 1.
+					note = x[0]
+				if not note[-1].isdigit():
+					note += '4'		# default to fourth octave
+				a=pitchhz[note]
+				kn = keynum[note]
+				a = a * 2**transpose
+				if x[1] < 0:
+					b=length(-2.*x[1]/3.)
+				else:
+					b=length(x[1])
 
-		    if x[0]=='r':
-		        b=length(x[1])
-			ex_pos = ex_pos + b
+				render2(a, b, vol, int(ex_pos), kn, note)
+				ex_pos = ex_pos + b
+
+			if x[0]=='r':
+				b=length(x[1])
+				ex_pos = ex_pos + b
 
 	##########################################################################
 	# Write to output file (in WAV format)
