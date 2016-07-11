@@ -23,20 +23,22 @@ Enter the directory (`cd PySynth`) and run
 ## Sample usage
 
 Basic usage:
+
 `import pysynth as ps
 test = (('c', 4), ('e', 4), ('g', 4), ('c5', 1))
 pysynth.make_wav(test, fn = "test.wav")`
 
 More advanced usage:
+
 `import pysynth_b as psb # a, b, e, and s variants available
 
 ''' Note name (a to g), then optionally a '#' for sharp, then optionally the octave (defaults to 4). An asterisk at the end means to play the note a little louder.'''
 song = (
-  ('c', 4), ('c*', 4), ('e', 4), 
-  ('g#', 4),  ('g*', 2), ('g5', 4),
-  ('g5*', 4), ('r', 4), ('e5', 16),
+  ('c', 4), ('c\*', 4), ('e', 4), 
+  ('g#', 4),  ('g\*', 2), ('g5', 4),
+  ('g5\*', 4), ('r', 4), ('e5', 16),
   ('f5', 16),  ('e5', 16),  ('d5', 16),
-  ('e5*', 4) 
+  ('e5\*', 4) 
 )`
 
 # Beats per minute (bpm) is really quarters per minute here
