@@ -29,26 +29,9 @@
 """
 
 from demosongs import *
+from mkfreq import getfreq
 
-##########################################################################
-# Compute and print piano key frequency table
-##########################################################################
-pitchhz = {}
-keys_s = ('a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#')
-keys_f = ('a', 'bb', 'b', 'c', 'db', 'd', 'eb', 'e', 'f', 'gb', 'g', 'ab')
-
-if __name__ == '__main__':
-    print("Piano key frequencies (for equal temperament):")
-    print("Key number\tScientific name\tFrequency (Hz)")
-for k in range(88):
-    freq = 27.5 * 2.**(k/12.)
-    oct = (k+9) // 12
-    note = '%s%u' % (keys_s[k%12], oct)
-    if __name__ == '__main__':
-        print("%10u\t%15s\t%14.2f" % (k+1, note.upper(), freq))
-    pitchhz[note] = freq
-    note = '%s%u' % (keys_f[k%12], oct)
-    pitchhz[note] = freq
+pitchhz, keynum = getfreq(pr = True)
 
 ##########################################################################
 #### Main program starts below

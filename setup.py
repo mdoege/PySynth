@@ -9,5 +9,5 @@ setup(name="PySynth",
         author_email="mdoege@compuserve.com",
 	url="http://mdoege.github.io/PySynth/",
         py_modules=["pysynth", "pysynth_b", "pysynth_s", "pysynth_e", "pysynth_beeper","play_wav"],
-	scripts=["read_abc.py", "nokiacomposer2wav.py", "test_nokiacomposer2wav.py", "menv.py", "mixfiles.py", "demosongs.py"],
+	scripts=["read_abc.py", "nokiacomposer2wav.py", "test_nokiacomposer2wav.py", "menv.py", "mixfiles.py", "demosongs.py", "mkfreq.py"],
 )

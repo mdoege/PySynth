@@ -35,13 +35,9 @@ import numpy as np
 from math import sin, cos, pi, log, exp
 from mixfiles import mix_files
 from demosongs import *
+from mkfreq import getfreq
 
-##########################################################################
-# Compute and print piano key frequency table
-##########################################################################
-pitchhz, keynum = {}, {}
-keys_s = ('a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#')
-keys_f = ('a', 'bb', 'b', 'c', 'db', 'd', 'eb', 'e', 'f', 'gb', 'g', 'ab')
+pitchhz, keynum = getfreq()
 
 # Harmonic intensities (dB) for selected piano keys,
 # measured with output from a Yamaha P-85
@@ -76,22 +72,6 @@ def linint(arr, x):
 			ly = v[1]		
 	#print lx, ly, ux, uy
 	return (float(x) - lx) / (ux - lx) * (uy - ly) + ly
-
-
-#if __name__ == '__main__':
-    #print "Piano key frequencies (for equal temperament):"
-    #print "Key number\tScientific name\tFrequency (Hz)"
-for k in range(88):
-    freq = 27.5 * 2.**(k/12.)
-    oct = (k+9) // 12
-    note = '%s%u' % (keys_s[k%12], oct)
-    #if __name__ == '__main__':
-    #    print "%10u\t%15s\t%14.2f" % (k+1, note.upper(), freq)
-    pitchhz[note] = freq
-    keynum[note] = k
-    note = '%s%u' % (keys_f[k%12], oct)
-    pitchhz[note] = freq
-    keynum[note] = k
 
 harmtab = np.zeros((88, 20))
 
