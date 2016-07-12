@@ -68,4 +68,6 @@ More documentation and examples at the [PySynth homepage][1].
 
 ## Current limitations
 
-Flats and sharps do not work in cases such as e-sharp or c-flat.
+In v1.1, flats and sharps do not work in cases such as e-sharp or c-flat.
+This has been fixed in the latest git version.
+
