@@ -1,3 +1,5 @@
+# coding=utf-8
+
 # Example 1: The C major scale
 song1 = [
 ['c',4],['d',4],['e',4],['f',4],['g',4],['a',4],['b',4],['c5',2],['r',1],
