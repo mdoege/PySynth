@@ -2,7 +2,7 @@
 
 PySynth is a simple music synthesizer written in Python. The goal is not to produce many different sounds, but to have scripts that can turn ABC notation into a WAV file without too much tinkering.
 
-There are three variants: **PySynth A** is faster, only depends on Python 2, and sounds like a cross between a flute and organ. **PySynth B** is more complex in sound and needs [NumPy][2]. It's supposed to be a little closer to a piano. **PySynth S** is more comparable to a guitar, banjo, or harpsichord, depending on note length and pitch. Finally, **PySynth E** is an FM-synthesized e-piano.
+There are three variants: **PySynth A** is faster, only depends on Python 3, and sounds like a cross between a flute and organ. **PySynth B** is more complex in sound and needs [NumPy][2]. It's supposed to be a little closer to a piano. **PySynth S** is more comparable to a guitar, banjo, or harpsichord, depending on note length and pitch. Finally, **PySynth E** is an FM-synthesized e-piano.
 
 The current release of the synthesizer can only play one note at a time. (Although successive notes can overlap in PySynth B and S, but not A.) However, two output files can be mixed together to get stereo sound.
 
