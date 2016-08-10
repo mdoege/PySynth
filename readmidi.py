@@ -60,22 +60,6 @@ class Note(object):
 	def get_end(self):
 		return self.start + self.duration
 
-def notes_from_xml(element):
-	track = []
-	for child in element.childNodes:
-		if child.attributes and (child.tagName == 'MidiNote' or child.tagName == 'TempMidiNote'):
-			try:
-				track.append(Note(0, int(child.getAttribute('pitch')), int(child.getAttribute('velocity')), float(child.getAttribute('start')), float(child.getAttribute('duration'))))
-			except Exception as e:
-				print("Cannot parse MidiNote or TempMidiNote: " + str(e))
-	return track
-
-def notes_to_str(notes):
-	s = ""
-	for note in notes:
-		s += str(note) + " "
-	return s
-
 class MidiFile(object):
 	"Represents the Notes in a midi file"
 	
