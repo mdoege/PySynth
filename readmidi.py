@@ -2,6 +2,10 @@
 
 # Read MIDI file track and synthesize with PySynth A
 
+# Usage:
+
+# python readmidi.py file.mid [tracknum] [file.wav]
+
 # Based on code from https://github.com/osakared/midifile.py
 
 # Original license:
@@ -165,6 +169,9 @@ class MidiFile(object):
 							param1 = flag
 						type = ((type_and_channel & 0xF0) >> 4)
 						channel = type_and_channel & 0xF
+						if type == 0xC:	# detect MIDI program change
+							print("program change, channel", channel, "=", param1)
+							continue
 						size -= 1
 						param2 = self.read_byte(file)
 						
@@ -198,12 +205,20 @@ def getdur(a, b):
 if __name__ == "__main__":
 	import sys
 	m = MidiFile(sys.argv[1])
+	if len(sys.argv) > 2:
+		tracknum = int(sys.argv[2])
+	else:
+		tracknum = 1
+	if len(sys.argv) > 3:
+		filename = sys.argv[3]
+	else:
+		filename = "midi.wav"
 	for t, n in enumerate(m.tracks):
 		if len(n) > 0:
 			print(t, n[0], len(n))
 	song = []
-	last1, last2 = -1, -1
-	for n in m.tracks[1]:
+	last1, last2 = -1, 0
+	for n in m.tracks[tracknum]:
 		nn = str(n).split()
 		start, stop = float(nn[2]), float(nn[3])
 		# PySynth is monophonic:
@@ -218,5 +233,5 @@ if __name__ == "__main__":
 		song.append((nn[0].lower(), getdur(start, stop)))
 	print(song)
 	import pysynth
-	pysynth.make_wav(song, fn = "midi.wav", bpm = m.tempo)
+	pysynth.make_wav(song, fn = filename, bpm = m.tempo)
 
