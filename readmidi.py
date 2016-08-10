@@ -144,11 +144,15 @@ class MidiFile(object):
 						type = self.read_byte(file)
 						if type == 0x2F:
 							break
-						# print "Meta: " + str(type)
+						print("Meta: " + str(type))
 						length, size = self.read_variable_length(file, size)
 						message = file.read(length)
 						# if type not in [0x0, 0x7, 0x20, 0x2F, 0x51, 0x54, 0x58, 0x59, 0x7F]:
-						# 	print message
+						print(length, message)
+						if type == 0x51:	# qpm/bpm
+							# http://www.recordingblogs.com/sa/Wiki?topic=MIDI+Set+Tempo+meta+message
+							self.tempo = 6e7 / struct.unpack('>i', b'\x00' + message)[0]
+							print("tempo =", self.tempo, "bpm")
 					# Midi messages
 					else:
 						if flag & 0x80:
@@ -175,6 +179,7 @@ class MidiFile(object):
 
 		except Exception as e:
 			print("Cannot parse midi file: " + str(e))
+			#raise
 		finally:
 			file.close()
 	
@@ -213,5 +218,5 @@ if __name__ == "__main__":
 		song.append((nn[0].lower(), getdur(start, stop)))
 	print(song)
 	import pysynth
-	pysynth.make_wav(song, fn = "midi.wav")
+	pysynth.make_wav(song, fn = "midi.wav", bpm = m.tempo)
 
