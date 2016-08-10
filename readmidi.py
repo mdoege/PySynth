@@ -39,7 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import struct
 
 class Note(object):
-	"Represents a single midi note"
+	"Represents a single MIDI note"
 	
 	note_names = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
 	
@@ -61,7 +61,7 @@ class Note(object):
 		return self.start + self.duration
 
 class MidiFile(object):
-	"Represents the Notes in a midi file"
+	"Represents the notes in a MIDI file"
 	
 	def read_byte(self, file):
 		return struct.unpack('B', file.read(1))[0]
@@ -92,10 +92,10 @@ class MidiFile(object):
 		self.tempo = 120
 		try:
 			file = open(file_name, 'rb')
-			if file.read(4) != b'MThd': raise Exception('Not a midi file')
+			if file.read(4) != b'MThd': raise Exception('Not a MIDI file')
 			self.file_name = file_name
 			size = struct.unpack('>i', file.read(4))[0]
-			if size != 6: raise Exception('Unusual midi file with non-6 sized header')
+			if size != 6: raise Exception('Unusual MIDI file with non-6 sized header')
 			self.format = struct.unpack('>h', file.read(2))[0]
 			self.track_count = struct.unpack('>h', file.read(2))[0]
 			self.time_division = struct.unpack('>h', file.read(2))[0]
@@ -141,7 +141,7 @@ class MidiFile(object):
 							# http://www.recordingblogs.com/sa/Wiki?topic=MIDI+Set+Tempo+meta+message
 							self.tempo = 6e7 / struct.unpack('>i', b'\x00' + message)[0]
 							print("tempo =", self.tempo, "bpm")
-					# Midi messages
+					# MIDI messages
 					else:
 						if flag & 0x80:
 							type_and_channel = flag#self.read_byte(file)
@@ -159,7 +159,7 @@ class MidiFile(object):
 						size -= 1
 						param2 = self.read_byte(file)
 						
-						# For now, anyway, we only care about midi ons and midi offs
+						# detect MIDI ons and MIDI offs
 						if type == 0x9:
 							track.append(Note(channel, param1, param2, abs_time))
 						elif type == 0x8:
@@ -169,7 +169,7 @@ class MidiFile(object):
 									break
 
 		except Exception as e:
-			print("Cannot parse midi file: " + str(e))
+			print("Cannot parse MIDI file: " + str(e))
 			#raise
 		finally:
 			file.close()
