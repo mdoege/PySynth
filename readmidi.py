@@ -132,13 +132,13 @@ class MidiFile(object):
 
 					size -= 1
 					flag = self.read_byte(file)
-					# Sysex, which we aren't interested in
+					# Sysex messages
 					if flag == 0xF0 or flag == 0xF7:
 						# print "Sysex"
 						while True:
 							size -= 1
 							if self.read_byte(file) == 0xF7: break
-					# Meta, which we also aren't interested in
+					# Meta messages
 					elif flag == 0xFF:
 						size -= 1
 						type = self.read_byte(file)
