@@ -80,13 +80,6 @@ class MidiFile(object):
 					break
 		
 		return (num, counter)
-
-	def find_track(self, file, pos = 0):
-		"Find position of next track in file"
-		file.seek(pos)
-		b = file.read(10000)
-		p = b.find(b"MTrk")
-		file.seek(p + pos)
 	
 	def __init__(self, file_name):
 		self.tempo = 120
@@ -107,7 +100,7 @@ class MidiFile(object):
 
 			for nn, track in enumerate(self.tracks):
 				abs_time = 0.
-				self.find_track(file, file.tell())
+
 				if file.read(4) != b'MTrk': raise Exception('Not a valid track')
 				size = struct.unpack('>i', file.read(4))[0]
 
@@ -130,7 +123,9 @@ class MidiFile(object):
 					elif flag == 0xFF:
 						size -= 1
 						type = self.read_byte(file)
-						if type == 0x2F:
+						if type == 0x2F:	# end of track event
+							self.read_byte(file)
+							size -= 1
 							break
 						print("Meta: " + str(type))
 						length, size = self.read_variable_length(file, size)
@@ -144,7 +139,7 @@ class MidiFile(object):
 					# MIDI messages
 					else:
 						if flag & 0x80:
-							type_and_channel = flag#self.read_byte(file)
+							type_and_channel = flag
 							size -= 1
 							param1 = self.read_byte(file)
 							last_flag = flag
@@ -197,6 +192,8 @@ if __name__ == "__main__":
 		filename = sys.argv[3]
 	else:
 		filename = "midi.wav"
+	print()
+	print("Track first notes")
 	for t, n in enumerate(m.tracks):
 		if len(n) > 0:
 			print(t, n[0], len(n))
@@ -215,6 +212,8 @@ if __name__ == "__main__":
 		last1 = start
 		last2 = stop
 		song.append((nn[0].lower(), getdur(start, stop)))
+	print()
+	print("Song")
 	print(song)
 	import pysynth
 	pysynth.make_wav(song, fn = filename, bpm = m.tempo)
