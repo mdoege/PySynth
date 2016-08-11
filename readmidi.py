@@ -7,6 +7,8 @@
 # python readmidi.py file.mid [tracknum] [file.wav]
 
 # Based on code from https://github.com/osakared/midifile.py
+# which appears to be based on
+# https://github.com/gasman/jasmid/blob/master/midifile.js
 
 # Original license:
 
@@ -165,7 +167,6 @@ class MidiFile(object):
 
 		except Exception as e:
 			print("Cannot parse MIDI file: " + str(e))
-			#raise
 		finally:
 			file.close()
 	
