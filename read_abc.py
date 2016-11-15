@@ -257,7 +257,7 @@ def get_bpm(s, u = "1/4"):
 		return int(b) * 4. * float(c) / float(d)
 
 fn = sys.argv[1]
-if fn[:5] == 'http:':
+if fn[:5] == 'http:' or fn[:6] == 'https:':
 	f = urllib.request.urlopen(fn).read().decode('utf-8').splitlines(keepends=True)
 else:
 	f = open(fn)
