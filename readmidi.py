@@ -39,6 +39,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 import struct
+import sys
+assert sys.version >= '3.3', "This program does not work with older versions of Python.\
+ Please install Python 3.3 or later."
 
 class Note(object):
 	"Represents a single MIDI note"
