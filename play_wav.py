@@ -66,7 +66,7 @@ class Sound:
 		data = wf.readframes(chunk)
 
 		# play stream
-		while data != '':
+		while data != b'':
 			stream.write(data)
 			data = wf.readframes(chunk)
 
