@@ -3,12 +3,12 @@
 from distutils.core import setup
 
 setup(name="PySynth",
-        version="1.2",
-        description="A simple music synthesizer for Python",
+        version="2.0",
+        description="A simple music synthesizer for Python 3",
         author="Martin C. Doege",
         author_email="mdoege@compuserve.com",
 	url="http://mdoege.github.io/PySynth/",
         py_modules=["pysynth", "pysynth_b", "pysynth_s", "pysynth_e", "pysynth_beeper", "play_wav", "mixfiles", "mkfreq", "demosongs"],
-	scripts=["read_abc.py", "nokiacomposer2wav.py", "test_nokiacomposer2wav.py", "menv.py"],
+	scripts=["read_abc.py", "readmidi.py", "nokiacomposer2wav.py", "test_nokiacomposer2wav.py", "menv.py"],
 )
 
