@@ -1,6 +1,6 @@
 ## Overview
 
-PySynth is a simple music synthesizer written in Python. The goal is not to produce many different sounds, but to have scripts that can turn ABC notation into a WAV file without too much tinkering.
+PySynth is a simple music synthesizer written in Python 3. The goal is not to produce many different sounds, but to have scripts that can turn ABC notation into a WAV file without too much tinkering.
 
 There are three variants: **PySynth A** is faster, only depends on Python 3, and sounds like a cross between a flute and organ. **PySynth B** is more complex in sound and needs [NumPy][2]. It's supposed to be a little closer to a piano. **PySynth S** is more comparable to a guitar, banjo, or harpsichord, depending on note length and pitch. Finally, **PySynth E** is an FM-synthesized e-piano.
 
@@ -19,13 +19,13 @@ or
 
 Enter the directory (`cd PySynth`) and run 
 
-`python setup.py install`
+`python3 setup.py install`
 
 ## Sample usage
 
 Basic usage:
 
-```python
+```python3
 import pysynth as ps
 test = (('c', 4), ('e', 4), ('g', 4),
 		('c5', -2), ('e6', 8), ('d#6', 2))
@@ -34,7 +34,7 @@ ps.make_wav(test, fn = "test.wav")
 
 More advanced usage:
 
-```python
+```python3
 import pysynth_b as psb # a, b, e, and s variants available
 
 ''' (note, duration)
@@ -57,7 +57,7 @@ psb.make_wav(song, fn = "danube.wav", leg_stac = .7, bpm = 180)
 
 Read ABC file and output WAV:
 
-`python read_abc.py straw.abc`
+`python3 read_abc.py straw.abc`
 
 ## Documentation
 
@@ -65,9 +65,3 @@ More documentation and examples at the [PySynth homepage][1].
 
 [1]: http://mdoege.github.io/PySynth/
 [2]: http://numpy.scipy.org/
-
-## Current limitations
-
-In v1.1, flats and sharps do not work in cases such as e-sharp or c-flat.
-This has been fixed in the latest git version.
-
