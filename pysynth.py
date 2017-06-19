@@ -79,47 +79,47 @@ def make_wav(song,bpm=120,transpose=0,pause=.05,boost=1.1,repeat=0,fn="out.wav",
 	bpmfac = 120./bpm
 
 	def length(l):
-	    return 88200./l*bpmfac
+		return 88200./l*bpmfac
 
 	def waves2(hz,l):
-	    a=44100./hz
-	    b=float(l)/44100.*hz
-	    return [a,round(b)]
+		a=44100./hz
+		b=float(l)/44100.*hz
+		return [a,round(b)]
 
 	def sixteenbit(x):
-	    return struct.pack('h', round(32000*x))
+		return struct.pack('h', round(32000*x))
 
 	def asin(x):
-	    return math.sin(2.*math.pi*x)
+		return math.sin(2.*math.pi*x)
 
 	def render2(a,b,vol):
-	    b2 = (1.-pause)*b
-	    l=waves2(a,b2)
-	    ow=b''
-	    q=int(l[0]*l[1])
+		b2 = (1.-pause)*b
+		l=waves2(a,b2)
+		ow=b''
+		q=int(l[0]*l[1])
 
-	    # harmonics are frequency-dependent:
-	    lf = math.log(a)
-	    lf_fac = (lf-3.) / harm_max
-	    if lf_fac > 1: harm = 0
-	    else: harm = 2. * (1-lf_fac)
-	    decay = 2. / lf
-	    t = (lf-3.) / (8.5-3.)
-	    volfac = 1. + .8 * t * math.cos(math.pi/5.3*(lf-3.))
+		# harmonics are frequency-dependent:
+		lf = math.log(a)
+		lf_fac = (lf-3.) / harm_max
+		if lf_fac > 1: harm = 0
+		else: harm = 2. * (1-lf_fac)
+		decay = 2. / lf
+		t = (lf-3.) / (8.5-3.)
+		volfac = 1. + .8 * t * math.cos(math.pi/5.3*(lf-3.))
 
-	    for x in range(q):
-	         fac=1.
-	         if x<100: fac=x/80.
-	         if 100<=x<300: fac=1.25-(x-100)/800.
-	         if x>q-400: fac=1.-((x-q+400)/400.)
-	         s = float(x)/float(q)
-	         dfac =  1. - s + s * decay
-	         ow=ow+sixteenbit((asin(float(x)/l[0])
-	              +harm*asin(float(x)/(l[0]/2.))
-	              +.5*harm*asin(float(x)/(l[0]/4.)))/4.*fac*vol*dfac*volfac)
-	    fill = max(int(ex_pos - curpos - q), 0)
-	    f.writeframesraw((ow)+(sixteenbit(0)*fill))
-	    return q + fill
+		for x in range(q):
+			fac=1.
+			if x<100: fac=x/80.
+			if 100<=x<300: fac=1.25-(x-100)/800.
+			if x>q-400: fac=1.-((x-q+400)/400.)
+			s = float(x)/float(q)
+			dfac =  1. - s + s * decay
+			ow=ow+sixteenbit((asin(float(x)/l[0])
+				+harm*asin(float(x)/(l[0]/2.))
+				+.5*harm*asin(float(x)/(l[0]/4.)))/4.*fac*vol*dfac*volfac)
+		fill = max(int(ex_pos - curpos - q), 0)
+		f.writeframesraw((ow)+(sixteenbit(0)*fill))
+		return q + fill
 
 	##########################################################################
 	# Write to output file (in WAV format)

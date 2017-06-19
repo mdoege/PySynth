@@ -31,6 +31,8 @@ elif "--syn_s" in sys.argv:
 	import pysynth_s as pysynth
 elif "--syn_e" in sys.argv:
 	import pysynth_e as pysynth
+elif "--syn_c" in sys.argv:
+	import pysynth_c as pysynth
 else:
 	import pysynth
 

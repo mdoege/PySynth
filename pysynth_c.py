@@ -55,14 +55,6 @@ pitchhz, keynum = getfreq(pr = True)
 
 # Output file name
 #fn = 'pysynth_output.wav'
-
-# Other parameters:
-
-# Influences the decay of harmonics over frequency. Lowering the
-# value eliminates even more harmonics at high frequencies.
-# Suggested range: between 3. and 5., depending on the frequency response
-#  of speakers/headphones used
-harm_max = 4.
 ##########################################################################
 
 import wave, math, struct
@@ -79,36 +71,36 @@ def make_wav(song,bpm=120,transpose=0,pause=.05,boost=1.1,repeat=0,fn="out.wav",
 	bpmfac = 120./bpm
 
 	def length(l):
-	    return 88200./l*bpmfac
+		return 88200./l*bpmfac
 
 	def waves2(hz,l):
-	    a=44100./hz
-	    b=float(l)/44100.*hz
-	    return [a,round(b)]
+		a=44100./hz
+		b=float(l)/44100.*hz
+		return [a,round(b)]
 
 	def sixteenbit(x):
-	    return struct.pack('h', round(32000*x))
+		return struct.pack('h', round(32000*x))
 
 	def render2(a,b,vol):
-	    b2 = (1.-pause)*b
-	    l=waves2(a,b2)
-	    ow=b''
-	    q=int(l[0]*l[1])
+		b2 = (1.-pause)*b
+		l=waves2(a,b2)
+		ow=b''
+		q=int(l[0]*l[1])
 
-	    osc = -1
-	    oscstep = 2./l[0]
-	    sp = 0
-	    fade = 1
+		osc = -1
+		oscstep = 2./l[0]
+		sp = 0
+		fade = 1
 
-	    for x in range(q):
-	         if q - x < 100: fade = (q - x) / 100.
-	         sp += (osc - sp) / 100
-	         ow=ow+sixteenbit(fade * vol * sp)
-	         osc += oscstep
-	         if osc > 1: osc = -1
-	    fill = max(int(ex_pos - curpos - q), 0)
-	    f.writeframesraw((ow)+(sixteenbit(0)*fill))
-	    return q + fill
+		for x in range(q):
+			if q - x < 100: fade = (q - x) / 100.
+			sp += (osc - sp) / 100
+			ow=ow+sixteenbit(fade * vol * sp)
+			osc += oscstep
+			if osc > 1: osc = -1
+		fill = max(int(ex_pos - curpos - q), 0)
+		f.writeframesraw((ow)+(sixteenbit(0)*fill))
+		return q + fill
 
 	##########################################################################
 	# Write to output file (in WAV format)
