@@ -89,9 +89,6 @@ def make_wav(song,bpm=120,transpose=0,pause=.05,boost=1.1,repeat=0,fn="out.wav",
 	def sixteenbit(x):
 	    return struct.pack('h', round(32000*x))
 
-	def asin(x):
-	    return math.sin(2.*math.pi*x)
-
 	def render2(a,b,vol):
 	    b2 = (1.-pause)*b
 	    l=waves2(a,b2)
