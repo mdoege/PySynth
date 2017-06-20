@@ -4,7 +4,7 @@
 
 # Usage:
 
-# python readmidi.py file.mid [tracknum] [file.wav]
+# python readmidi.py file.mid [tracknum] [file.wav]  [--syn_b/--syn_s/--syn_e]
 
 # Based on code from https://github.com/osakared/midifile.py
 # which appears to be based on
@@ -202,23 +202,41 @@ if __name__ == "__main__":
 		if len(n) > 0:
 			print(t, n[0], len(n))
 	song = []
-	last1, last2 = -1, 0
+	last1, last2, lastnote = -1, 0, 0
 	for n in m.tracks[tracknum]:
+		#print(n)
 		nn = str(n).split()
 		start, stop = float(nn[2]), float(nn[3])
 		# PySynth is monophonic:
 		if start == last1:
 			continue
 		# Add rests:
-		if last2 > -1 and start - last2 > 0:
+		if last2 > -1 and start - last2 > 0 and float(nn[1]) > 0:
 			song.append(('r', getdur(last2, start)))
 
+		if start != stop:	# note ends because of NOTE OFF event
+			song.append((nn[0].lower(), getdur(start, stop)))
+		elif lastnote != 0 and float(nn[1]) == 0: # note ends because of NOTE ON with velocity = 0
+			song.append((lastnote, getdur(last1, start)))
 		last1 = start
 		last2 = stop
-		song.append((nn[0].lower(), getdur(start, stop)))
+		lastnote = nn[0].lower()
 	print()
 	print("Song")
 	print(song)
-	import pysynth
+	if "--syn_b" in sys.argv:
+		import pysynth_b as pysynth
+	elif "--syn_s" in sys.argv:
+		import pysynth_s as pysynth
+	elif "--syn_e" in sys.argv:
+		import pysynth_e as pysynth
+	elif "--syn_c" in sys.argv:
+		import pysynth_c as pysynth
+	elif "--syn_d" in sys.argv:
+		import pysynth_d as pysynth
+	elif "--syn_p" in sys.argv:
+		import pysynth_p as pysynth
+	else:
+		import pysynth
 	pysynth.make_wav(song, fn = filename, bpm = m.tempo)
 

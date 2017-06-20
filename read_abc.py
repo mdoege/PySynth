@@ -33,6 +33,10 @@ elif "--syn_e" in sys.argv:
 	import pysynth_e as pysynth
 elif "--syn_c" in sys.argv:
 	import pysynth_c as pysynth
+elif "--syn_d" in sys.argv:
+	import pysynth_d as pysynth
+elif "--syn_p" in sys.argv:
+	import pysynth_p as pysynth
 else:
 	import pysynth
 
@@ -204,7 +208,7 @@ def add_note(a, n):
 		if triplet:
 			leng *= tripfac
 			triplet -= 1
-		if note[0].lower() == 'z':
+		if note[0].lower() == 'z' or note[0].lower() == 'x':
 			note = 'r'
 			song += [["%s" % note, leng]]
 			if not only_first:
