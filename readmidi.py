@@ -4,7 +4,7 @@
 
 # Usage:
 
-# python readmidi.py file.mid [tracknum] [file.wav]  [--syn_b/--syn_s/--syn_e]
+# python readmidi.py file.mid [tracknum] [file.wav]  [--syn_b/--syn_c/--syn_d/--syn_e/--syn_p/--syn_s]
 
 # Based on code from https://github.com/osakared/midifile.py
 # which appears to be based on
