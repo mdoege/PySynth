@@ -8,13 +8,13 @@ The current release of the synthesizer can only play one note at a time. (Althou
 
 | Synth  | Synthesis method | Timbre | Needs NumPy? |
 | --- | --- | --- | --- |
-| A  | additive  |flute/organ/piano | no
-| B | additive |acoustic piano | yes
-| C | subtractive | bowed string | no
-| D | subtractive | woodwind/synth lead | no
-| E | FM/phase modulation | DX7 Rhodes | yes
-| P | subtractive | untuned percussion | no
-| S | Karplus-Strong (physical modeling)| plucked string | yes
+| A | additive (3 sine waves) | flute/organ/piano | no
+| B | additive (5 sine waves) | acoustic piano | yes
+| C | subtractive (sawtooth wave) | bowed string | no
+| D | subtractive (square wave) | woodwind/synth lead | no
+| E | FM/phase modulation (6 sine waves) | DX7 Rhodes | yes
+| P | subtractive (white noise) | untuned percussion | no
+| S | Karplus-Strong (physical modeling) | plucked string | yes
 | beeper | additive | Nokia phone | no
 
 ## Installation
