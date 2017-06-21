@@ -202,25 +202,40 @@ if __name__ == "__main__":
 		if len(n) > 0:
 			print(t, n[0], len(n))
 	song = []
-	last1, last2, lastnote = -1, 0, 0
+	last2 = 0
+	notes = {}
+
+	def getnote(q):
+		for x in q.keys():
+			if q[x] > 0:
+				return x
+		return None
+
 	for n in m.tracks[tracknum]:
 		#print(n)
 		nn = str(n).split()
 		start, stop = float(nn[2]), float(nn[3])
-		# PySynth is monophonic:
-		if start == last1:
-			continue
-		# Add rests:
-		if last2 > -1 and start - last2 > 0 and float(nn[1]) > 0:
-			song.append(('r', getdur(last2, start)))
 
 		if start != stop:	# note ends because of NOTE OFF event
+			if last2 > -1 and start - last2 > 0:
+				song.append(('r', getdur(last2, start)))
 			song.append((nn[0].lower(), getdur(start, stop)))
-		elif lastnote != 0 and float(nn[1]) == 0: # note ends because of NOTE ON with velocity = 0
-			song.append((lastnote, getdur(last1, start)))
-		last1 = start
-		last2 = stop
-		lastnote = nn[0].lower()
+			last2 = stop
+		elif float(nn[1]) == 0 and notes.get(nn[0].lower(), 0) > 0: # note ends because of NOTE ON with velocity = 0
+			if last2 > -1 and notes[nn[0].lower()] - last2 > 0:
+				song.append(('r', getdur(last2, notes[nn[0].lower()])))
+			song.append((nn[0].lower(), getdur(notes[nn[0].lower()], start)))
+			notes[nn[0].lower()] = 0
+			last2 = start
+		elif float(nn[1]) > 0 and notes.get(nn[0].lower(), 0) == 0: # note ends because of new note
+			old = getnote(notes)
+			if old != None:
+				song.append((old, getdur(notes[old], start)))
+				notes[old] = 0
+			elif start - last2 > 0:
+				song.append(('r', getdur(last2, start)))
+			notes[nn[0].lower()] = start
+			last2 = start
 	print()
 	print("Song")
 	print(song)
