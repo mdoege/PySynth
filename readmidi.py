@@ -212,7 +212,7 @@ if __name__ == "__main__":
 		return None
 
 	for n in m.tracks[tracknum]:
-		#print(n)
+		print(n)
 		nn = str(n).split()
 		start, stop = float(nn[2]), float(nn[3])
 
@@ -230,7 +230,8 @@ if __name__ == "__main__":
 		elif float(nn[1]) > 0 and notes.get(nn[0].lower(), 0) == 0: # note ends because of new note
 			old = getnote(notes)
 			if old != None:
-				song.append((old, getdur(notes[old], start)))
+				if notes[old] != start:
+					song.append((old, getdur(notes[old], start)))
 				notes[old] = 0
 			elif start - last2 > 0:
 				song.append(('r', getdur(last2, start)))
