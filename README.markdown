@@ -6,16 +6,16 @@ The current release of the synthesizer can only play one note at a time. (Althou
 
 ## Synthesizer scripts
 
-| Synth  | Synthesis method | Timbre | Needs NumPy? |
-| --- | --- | --- | --- |
-| A | additive (3 sine waves) | flute/organ/piano | no
-| B | additive (5 sine waves) | acoustic piano | yes
-| C | subtractive (sawtooth wave) | bowed string | no
-| D | subtractive (square wave) | woodwind/synth lead | no
-| E | FM/phase modulation (6 sine waves) | DX7 Rhodes | yes
-| P | subtractive (white noise) | untuned percussion | no
-| S | Karplus-Strong (physical modeling) | plucked string | yes
-| beeper | additive | Nokia phone | no
+| Synth | Synthesis method | Approximate timbre | Note decay | Needs NumPy? |
+| --- | --- | --- | --- | --- |
+| A | additive (3 sine waves) | flute, organ, piano | slow | no
+| B | additive (5 sine waves) | acoustic piano | medium | yes
+| C | subtractive (sawtooth wave) | bowed string, synth pad | none | no
+| D | subtractive (square wave) | woodwind, synth lead | none | no
+| E | FM/phase modulation (6 sine waves) | DX7 Rhodes piano | medium | yes
+| P | subtractive (white noise) | untuned percussion hit | very fast | no
+| S | Karplus-Strong (physical modeling) | plucked string, guitar, koto | fast | yes
+| beeper | additive | Nokia phone ringtone | none | no
 
 ## Installation
 
