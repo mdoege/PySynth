@@ -186,7 +186,9 @@ def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav
 			new = note_cache[note].copy()
 		dec_ind = int(leg_stac*q)
 		new[dec_ind:] *= np.exp(-np.arange(raw_note-dec_ind)/3000.)
-		#print snd_len, raw_note
+		if snd_len > raw_note:
+			print("Warning, note too long:", snd_len, raw_note)
+			snd_len = raw_note
 		data[pos:pos+snd_len] += ( new[:snd_len] * fac * vol *
 		       (1. + schweb_amp * np.sin(2. * pi * np.arange(snd_len)/schweb/32.) )  )
 
