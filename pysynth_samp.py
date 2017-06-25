@@ -191,6 +191,8 @@ def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav
 		wf.close()
 
 		f = fnames[knum][1]
+		# Salamander samples every third piano key, so other notes
+		# are created by playing these samples faster (with linear interpolation):
 		if f > 1:
 			f2 = int(len(new) / f)
 			new2 = np.zeros(f2)
