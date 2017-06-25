@@ -16,7 +16,7 @@ The current release of the synthesizer can only play one note at a time. (Althou
 | P | subtractive (white noise) | untuned percussion hit | very fast | no
 | S | Karplus-Strong (physical modeling) | plucked string, guitar, koto | fast | yes
 | beeper | additive | Nokia phone ringtone | none | no
-| samp | sampler | Salamander piano | medium | yes
+| samp | sampler | [Salamander Grand Piano][3] | medium | yes
 
 ## Installation
 
@@ -77,3 +77,4 @@ More documentation and examples at the [PySynth homepage][1].
 
 [1]: http://mdoege.github.io/PySynth/
 [2]: http://numpy.scipy.org/
+[3]: http://freepats.zenvoid.org/Piano/acoustic-grand-piano.html
