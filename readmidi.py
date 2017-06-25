@@ -219,22 +219,25 @@ if __name__ == "__main__":
 		if start != stop:	# note ends because of NOTE OFF event
 			if last2 > -1 and start - last2 > 0:
 				song.append(('r', getdur(last2, start)))
+				print("r1")
 			song.append((nn[0].lower(), getdur(start, stop)))
 			last2 = stop
-		elif float(nn[1]) == 0 and notes.get(nn[0].lower(), 0) > 0: # note ends because of NOTE ON with velocity = 0
+		elif float(nn[1]) == 0 and notes.get(nn[0].lower(), -1) >= 0: # note ends because of NOTE ON with velocity = 0
 			if last2 > -1 and notes[nn[0].lower()] - last2 > 0:
 				song.append(('r', getdur(last2, notes[nn[0].lower()])))
+				print("r2")
 			song.append((nn[0].lower(), getdur(notes[nn[0].lower()], start)))
-			notes[nn[0].lower()] = 0
+			notes[nn[0].lower()] = -1
 			last2 = start
-		elif float(nn[1]) > 0 and notes.get(nn[0].lower(), 0) == 0: # note ends because of new note
+		elif float(nn[1]) > 0 and notes.get(nn[0].lower(), -1) == -1: # note ends because of new note
 			old = getnote(notes)
 			if old != None:
 				if notes[old] != start:
 					song.append((old, getdur(notes[old], start)))
-				notes[old] = 0
+				notes[old] = -1
 			elif start - last2 > 0:
 				song.append(('r', getdur(last2, start)))
+				print("r3")
 			notes[nn[0].lower()] = start
 			last2 = start
 	print()
@@ -252,6 +255,8 @@ if __name__ == "__main__":
 		import pysynth_d as pysynth
 	elif "--syn_p" in sys.argv:
 		import pysynth_p as pysynth
+	elif "--syn_samp" in sys.argv:
+		import pysynth_samp as pysynth
 	else:
 		import pysynth
 	pysynth.make_wav(song, fn = filename, bpm = m.tempo)
