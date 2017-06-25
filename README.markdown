@@ -16,6 +16,7 @@ The current release of the synthesizer can only play one note at a time. (Althou
 | P | subtractive (white noise) | untuned percussion hit | very fast | no
 | S | Karplus-Strong (physical modeling) | plucked string, guitar, koto | fast | yes
 | beeper | additive | Nokia phone ringtone | none | no
+| samp | sampler | Salamander piano | medium | yes
 
 ## Installation
 
