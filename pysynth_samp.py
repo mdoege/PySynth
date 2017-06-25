@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-#print "*** FM PIANO VERSION WITH NOTE CACHING ***"
-
 """
 ##########################################################################
 #                       * * *  PySynth  * * *
@@ -49,55 +47,6 @@ fnames = getfn(10)
 #       48 kHz version:
 patchpath = "/usr/share/sounds/SalamanderGrandPianoV3_48khz24bit/48khz24bit/"
 
-# Harmonic intensities (dB) for selected piano keys,
-# measured with output from a Yamaha P-85
-harmo = (
-  (1, -15.8, -3., -15.3, -22.8, -40.7),
-  (16, -15.8, -3., -15.3, -22.8, -40.7),
-  (28, -5.7, -4.4, -17.7, -16., -38.7),
-  (40, -6.8, -17.2, -22.4, -16.8, -75.6),
-  (52, -8.4, -19.7, -23.5, -21.6, -76.8),
-  (64, -9.3, -20.8, -37.2, -36.3, -76.4),
-  (76, -18., -64.5, -74.4, -77.3, -80.8),
-  (88, -24.8, -53.8, -77.2, -80.8, -90.),
-)
-
-def linint(arr, x):
-	"Interpolate an (X, Y) array linearly."
-	for v in arr:
-		if v[0] == x: return v[1]
-	xvals = [v[0] for v in arr]
-	ux = max(xvals)
-	lx = min(xvals)
-	try: assert lx <= x <= ux
-	except:
-		#print lx, x, ux
-		raise
-	for v in arr:
-		if v[0] > x and v[0] - x <= ux - x:
-			ux = v[0]
-			uy = v[1]
-		if v[0] < x and x - v[0] >= lx - x:
-			lx = v[0]
-			ly = v[1]		
-	#print lx, ly, ux, uy
-	return (float(x) - lx) / (ux - lx) * (uy - ly) + ly
-
-harmtab = np.zeros((88, 20))
-
-for h in range(1, len(harmo[0])):
-	dat = []
-	for n in range(len(harmo)):
-		dat.append((float(harmo[n][0]), harmo[n][h]))
-	for h2 in range(88):
-		harmtab[h2,h] = linint(dat, h2+1)
-
-#print harmtab[keynum['c4'],:]
-for h2 in range(88):
-	for n in range(20):
-		ref = harmtab[h2,1]
-		harmtab[h2,n] = 10.**((harmtab[h2,n] - ref)/20.)
-#print harmtab[keynum['c4'],:]
 
 ##########################################################################
 #### Main program starts below
@@ -119,18 +68,7 @@ for h2 in range(88):
 # Output file name
 #fn = 'pysynth_output.wav'
 
-# Other parameters:
-
-# Influences the decay of harmonics over frequency. Lowering the
-# value eliminates even more harmonics at high frequencies.
-# Suggested range: between 3. and 5., depending on the frequency response
-#  of speakers/headphones used
-harm_max = 5.
 ##########################################################################
-
-data = []
-note_cache = {}
-cache_this = {}
 
 def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav", silent=False):
 	f=wave.open(fn,'w')
@@ -145,25 +83,6 @@ def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav
 	def length(l):
 	    return 96000./l*bpmfac
 
-	def waves2(hz,l):
-	    a=48000./hz
-	    b=float(l)/48000.*hz
-	    return [a,round(b)]
-
-	att_len = 3000
-	att_bass = np.zeros(att_len)
-	att_treb = np.zeros(att_len)
-	for n in range(att_len):
-		att_treb[n] = linint(((0,0.), (100, .2), (300, .7), (400, .6), (600, .25), (800, .9), (1000, 1.25), (2000,1.15), (3000, 1.)), n)
-		att_bass[n] = linint(((0,0.), (100, .1), (300, .2), (400, .15), (600, .1), (800, .9), (1000, 1.25), (2000,1.15), (3000, 1.)), n)
-	decay = np.zeros(1000)
-	for n in range(900):
-		decay[n] = exp(linint(( (0,log(3)), (3,log(5)), (5, log(1.)), (6, log(.8)), (9,log(.1)) ), n/100.))
-
-	def zz(a):
-		for q in range(len(a)):
-			if a[q] < 0: a[q] = 0
-
 	def getval(v):
 		a = struct.unpack('i', v + b'\x00')[0] / 256 - 32768
 		if a > 0:
@@ -173,9 +92,6 @@ def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav
 		return(a)
 
 	def render2(a, b, vol, pos, knum, note):
-		l=waves2(a, b)
-		q=int(l[0]*l[1])
-		lf = log(a)
 		snd_len = int(b)
 
 		wf = wave.open(patchpath + fnames[knum][0], "rb")
@@ -222,10 +138,7 @@ def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav
 			y = y[:-1]
 		if not y[-1].isdigit():
 			y += '4'
-		cache_this[y] = cache_this.get(y, 0) + 1
-	#print "Note frequencies in song:", cache_this
-	data = np.zeros(int((repeat+1)*t_len + 441000))
-	#print len(data)/44100., "s allocated"
+	data = np.zeros(int((repeat+1)*t_len + 480000))
 
 	for rp in range(repeat+1):
 		for nn, x in enumerate(song):
@@ -262,7 +175,7 @@ def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav
 		print("Writing to file", fn)
 
 	data = data / (data.max() * 2.)
-	out_len = int(2. * 44100. + ex_pos+.5)
+	out_len = int(2. * 48000. + ex_pos+.5)
 	data2 = np.zeros(out_len, np.short)
 	data2[:] = 32000. * data[:out_len]
 	f.writeframes(data2.tostring())
