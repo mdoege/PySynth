@@ -5,7 +5,7 @@
 #                       * * *  PySynth  * * *
 #       A very basic audio synthesizer in Python (www.python.org)
 #
-#          Martin C. Doege, 2009-04-07 (mdoege@compuserve.com)
+#          Martin C. Doege, 2017-06-20 (mdoege@compuserve.com)
 ##########################################################################
 # Based on a program by Tyler Eaves (tyler at tylereaves.com) found at
 #   http://mail.python.org/pipermail/python-list/2000-August/049968.html
