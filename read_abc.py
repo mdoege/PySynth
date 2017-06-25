@@ -37,6 +37,8 @@ elif "--syn_d" in sys.argv:
 	import pysynth_d as pysynth
 elif "--syn_p" in sys.argv:
 	import pysynth_p as pysynth
+elif "--syn_samp" in sys.argv:
+	import pysynth_samp as pysynth
 else:
 	import pysynth
 
