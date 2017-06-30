@@ -202,7 +202,6 @@ if __name__ == "__main__":
 		if len(n) > 0:
 			print(t, n[0], len(n))
 	song = []
-	last2 = 0
 	notes = {}
 
 	def getnote(q):
@@ -211,35 +210,38 @@ if __name__ == "__main__":
 				return x
 		return None
 
+	def gettotal():
+		t = 0
+		for x, y in song:
+			t += 4 / y
+		return t
+
 	for n in m.tracks[tracknum]:
 		print(n)
 		nn = str(n).split()
 		start, stop = float(nn[2]), float(nn[3])
 
 		if start != stop:	# note ends because of NOTE OFF event
-			if last2 > -1 and start - last2 > 0:
-				song.append(('r', getdur(last2, start)))
+			if start - gettotal() > 0:
+				song.append(('r', getdur(gettotal(), start)))
 				print("r1")
 			song.append((nn[0].lower(), getdur(start, stop)))
-			last2 = stop
 		elif float(nn[1]) == 0 and notes.get(nn[0].lower(), -1) >= 0: # note ends because of NOTE ON with velocity = 0
-			if last2 > -1 and notes[nn[0].lower()] - last2 > 0:
-				song.append(('r', getdur(last2, notes[nn[0].lower()])))
+			if notes[nn[0].lower()] - gettotal() > 0:
+				song.append(('r', getdur(gettotal(), notes[nn[0].lower()])))
 				print("r2")
 			song.append((nn[0].lower(), getdur(notes[nn[0].lower()], start)))
 			notes[nn[0].lower()] = -1
-			last2 = start
 		elif float(nn[1]) > 0 and notes.get(nn[0].lower(), -1) == -1: # note ends because of new note
 			old = getnote(notes)
 			if old != None:
 				if notes[old] != start:
 					song.append((old, getdur(notes[old], start)))
 				notes[old] = -1
-			elif start - last2 > 0:
-				song.append(('r', getdur(last2, start)))
+			elif start - gettotal() > 0:
+				song.append(('r', getdur(gettotal(), start)))
 				print("r3")
 			notes[nn[0].lower()] = start
-			last2 = start
 	print()
 	print("Song")
 	print(song)
