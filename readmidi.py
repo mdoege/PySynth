@@ -206,7 +206,7 @@ if __name__ == "__main__":
 
 	def getnote(q):
 		for x in q.keys():
-			if q[x] > 0:
+			if q[x] >= 0:
 				return x
 		return None
 
