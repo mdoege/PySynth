@@ -29,9 +29,6 @@
 # 2.66 = -4 = dotted quarter
 # 5.33 = -8 = dotted eighth
 """
-import sys
-assert sys.version >= '3.3', "This program does not work with older versions of Python.\
- Please install Python 3.3 or later."
 
 import wave, struct
 import numpy as np

@@ -1,7 +1,3 @@
-import sys
-assert sys.version >= '3.3', "This program does not work with older versions of Python.\
- Please install Python 3.3 or later."
-
 import logging
 import math
 import struct 
