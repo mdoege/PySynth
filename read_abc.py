@@ -17,9 +17,10 @@ Some of the definitions are borrowed from PlayABC 1.1
 """
 
 import sys
-assert sys.version >= '3.3', "This program does not work with older versions of Python.\
- Please install Python 3.3 or later."
-import urllib.request, urllib.error, urllib.parse
+if sys.version >= '3':
+	import urllib.request, urllib.error, urllib.parse
+else:
+	import urllib2
 
 sel = False
 try: num = int(sys.argv[2])
@@ -269,7 +270,10 @@ def get_bpm(s, u = "1/4"):
 
 fn = sys.argv[1]
 if fn[:5] == 'http:' or fn[:6] == 'https:':
-	f = urllib.request.urlopen(fn).read().decode('utf-8').splitlines(keepends=True)
+	if sys.version >= '3':
+		f = urllib.request.urlopen(fn).read().decode('utf-8').splitlines(keepends=True)
+	else:
+		f = urllib2.urlopen(fn)
 else:
 	f = open(fn)
 
