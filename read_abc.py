@@ -16,9 +16,10 @@ Some of the definitions are borrowed from PlayABC 1.1
 2012-07-17
 """
 
-import sys, urllib.request, urllib.error, urllib.parse
+import sys
 assert sys.version >= '3.3', "This program does not work with older versions of Python.\
  Please install Python 3.3 or later."
+import urllib.request, urllib.error, urllib.parse
 
 sel = False
 try: num = int(sys.argv[2])
