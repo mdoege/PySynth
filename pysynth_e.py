@@ -29,9 +29,6 @@
 # 2.66 = -4 = dotted quarter
 # 5.33 = -8 = dotted eighth
 """
-import sys
-assert sys.version >= '3.3', "This program does not work with older versions of Python.\
- Please install Python 3.3 or later."
 
 import wave, struct
 import numpy as np
@@ -121,11 +118,11 @@ for h2 in range(88):
 harm_max = 5.
 ##########################################################################
 
-data = []
-note_cache = {}
-cache_this = {}
-
 def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav", silent=False):
+	data = []
+	note_cache = {}
+	cache_this = {}
+
 	f=wave.open(fn,'w')
 
 	f.setnchannels(1)
@@ -261,7 +258,7 @@ if __name__ == '__main__':
 
 	#make_wav((('c', 4), ('e', 4), ('g', 4), ('c5', 1)))
 	#make_wav(song1, fn = "pysynth_scale.wav")
-	#make_wav((('c1', 1), ('r', 1),('c2', 1), ('r', 1),('c3', 1), ('r', 1), ('c4', 1), ('r', 1),('c5', 1), ('r', 1),('c6', 1), ('r', 1),('c7', 1), ('r', 1),('c8', 1), ('r', 1), ('r', 1), ('r', 1), ('c4', 1),('r', 1), ('c4*', 1), ('r', 1), ('r', 1), ('r', 1), ('c4', 16), ('r', 1), ('c4', 8), ('r', 1),('c4', 4), ('r', 1),('c4', 1), ('r', 1),('c4', 1), ('r', 1)), fn = "all_cs.wav")
+	make_wav((('c1', 1), ('r', 1),('c2', 1), ('r', 1),('c3', 1), ('r', 1), ('c4', 1), ('r', 1),('c5', 1), ('r', 1),('c6', 1), ('r', 1),('c7', 1), ('r', 1),('c8', 1), ('r', 1), ('r', 1), ('r', 1), ('c4', 1),('r', 1), ('c4*', 1), ('r', 1), ('r', 1), ('r', 1), ('c4', 16), ('r', 1), ('c4', 8), ('r', 1),('c4', 4), ('r', 1),('c4', 1), ('r', 1),('c4', 1), ('r', 1)), fn = "all_cs.wav")
 
 	make_wav(song4_rh, bpm = 130, transpose = 1, boost = 1.15, repeat = 1, fn = "pysynth_bach_rh.wav")
 	make_wav(song4_lh, bpm = 130, transpose = 1, boost = 1.15, repeat = 1, fn = "pysynth_bach_lh.wav")
