@@ -2,6 +2,8 @@
 # Compute and print piano key frequency table
 ##########################################################################
 
+from __future__ import division
+
 pitchhz, keynum = {}, {}
 
 keys_s = ('a', 'a#', 'b',  'c',  'c#', 'd', 'd#', 'e',  'f',  'f#', 'g', 'g#')

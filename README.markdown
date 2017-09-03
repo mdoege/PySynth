@@ -4,7 +4,7 @@ PySynth is a simple music synthesizer written in Python 3. The goal is not to pr
 
 The current release of the synthesizer can only play one note at a time. (Although successive notes can overlap in PySynth B and S, but not A.) However, two output files can be mixed together to get stereo sound.
 
-The latest git version should also work in Python 2 again, with the exception of the PySynth samp module.
+The latest git version of PySynth also works in Python 2.
 
 ## Synthesizer scripts
 
