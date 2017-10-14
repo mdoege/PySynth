@@ -12,8 +12,8 @@ The latest git version of PySynth also works in Python 2.
 | --- | --- | --- | --- | --- |
 | A | additive (3 sine waves) | flute, organ, piano | variable (depends on note length) | no
 | B | additive (5 sine waves) | acoustic piano | medium | yes
-| C | subtractive (sawtooth wave) | bowed string, synth pad | none | no
-| D | subtractive (square wave) | woodwind, synth lead | none | no
+| C | subtractive (sawtooth wave) | bowed string, analog synth pad | none | no
+| D | subtractive (square wave) | woodwind, analog synth lead | none | no
 | E | FM/phase modulation (6 sine waves) | DX7 Rhodes piano | medium | yes
 | P | subtractive (white noise) | untuned percussion hit | very fast | no
 | S | Karplus-Strong (physical modeling) | plucked string, guitar, koto | fast | yes
