@@ -10,7 +10,7 @@ The latest git version of PySynth also works in Python 2.
 
 | Synth | Synthesis method | Approximate timbre | Note decay | Needs NumPy? |
 | --- | --- | --- | --- | --- |
-| A | additive (3 sine waves) | flute, organ, piano | slow | no
+| A | additive (3 sine waves) | flute, organ, piano | variable (depends on note length) | no
 | B | additive (5 sine waves) | acoustic piano | medium | yes
 | C | subtractive (sawtooth wave) | bowed string, synth pad | none | no
 | D | subtractive (square wave) | woodwind, synth lead | none | no
