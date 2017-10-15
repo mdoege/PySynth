@@ -10,7 +10,7 @@
 #          Martin C. Doege, 2009-06-13 (mdoege@compuserve.com)
 ##########################################################################
 # Based on a program by Tyler Eaves (tyler at tylereaves.com) found at
-#   http://mail.python.org/pipermail/python-list/2000-August/049968.html
+#   http://mail.python.org/pipermail/python-list/2000-August/041308.html
 ##########################################################################
 
 # 'song' is a Python list (or tuple) in which the song is defined,
