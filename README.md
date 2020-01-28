@@ -1,10 +1,8 @@
 ## Overview
 
-PySynth is a simple music synthesizer written in Python 3. The goal is not to produce many different sounds, but to have scripts that can turn ABC notation or MIDI files into a WAV file without too much tinkering.
+PySynth is a simple music synthesizer for Python 2 or 3. The goal is not to produce many different sounds, but to have scripts that can turn ABC notation or MIDI files into a WAV file without too much tinkering.
 
 The current release of the synthesizer can only play one note at a time. (Although successive notes can overlap in PySynth B and S, but not A.) However, two output files can be mixed together to get stereo sound.
-
-The latest git version of PySynth also works in Python 2.
 
 ## Synthesizer scripts
 
