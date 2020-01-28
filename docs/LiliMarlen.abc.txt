@@ -1,0 +1,41 @@
+X: 0
+T: LiliMarlen
+K: C
+
+
+X: 1
+M: C
+L: 1/8
+P: Lili Marlen'
+K: Bb
+[| "Bb"[DB,]>[DB,] [DB,][EC] [F2D2] [D2B,2] | "F7"[EA,]>[EA,] [EA,][BG] [A3F3]z \
+|  "F7"[CA,]>[CA,] [CA,][DB,] [E2C2] [EC][FD] | [AF]>[GE] [FD][EA,] "Bb"[D3B,3]z |
+|  "Eb"[G2E2] [AF][BG] [A2F2] [G2E2] | "Bb"[G2E2][F2D2] [A3F3] [GE] \
+|  "F7"[F2D2] [E2C2] [G3E3] [FD] | "Bb"[E2C2] [D2B,2] [F3D3] [DB,] |
+|  "F7"[F3D3] [EC] [E2C2] [c2E2] | "Bb"[B4D4] [D3B,3] [DB,] \
+|  "F7"[F3D3] [EA,] [E2A,2] [A,2F,2] | "Bb"[B,6D,6] z2 |]
+
+X: 2
+M: C
+L: 1/8
+P: Lili Marlen'
+K: C
+[| "C"[EC]>[EC] [EC][FD] [G2E2] [E2C2] | "G7"[FB,]>[FB,] [FB,][cA] [B3G3]z \
+|  "G7"[DB,]>[DB,] [DB,][EC] [F2D2] [FD][GE] | [BG]>[AF] [GE][FB,] "C"[E3C3]z |
+|  "F"[A2F2] [BG][cA] [B2G2] [A2F2] | "C"[A2F2][G2E2] [B3G3] [AF] \
+|  "G7"[G2E2] [F2D2] [A3F3] [GE] | "C"[F2D2] [E2C2] [G3E3] [EC] |
+|  "G7"[G3E3] [FD] [F2D2] [d2F2] | "C"[c4E4] [E3C3] [EC] \
+|  "G7"[G3E3] [FB,] [F2B,2] [B,2G,2] | "C"[C6E,6] z2 |]
+
+X: 3
+M: C
+L: 1/8
+P: Lili Marlen'
+K: D
+[| "D"[FD]>[FD] [FD][GE] [A2F2] [F2D2] | "A7"[GC]>[GC] [GC][dB] [c3A3]z \
+|  "A7"[EC]>[EC] [EC][FD] [G2E2] [GE][AF] | [cA]>[BG] [AF][GC] "D"[F3D3]z |
+|  "G"[B2G2] [cA][dB] [c2A2] [B2G2] | "D"[B2G2][A2F2] [c3A3] [BG] \
+|  "A7"[A2F2] [G2E2] [B3G3] [AF] | "D"[G2E2] [F2D2] [A3F3] [FD] |
+|  "A7"[A3F3] [GE] [G2E2] [e2G2] | "D"[d4F4] [F3D3] [FD] \
+|  "A7"[A3F3] [GC] [G2C2] [C2A,2] | "D"[D6F,6] z2 |]
+

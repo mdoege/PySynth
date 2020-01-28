@@ -1,0 +1,22 @@
+X: 1
+T: Invention 13 (RH)
+C: J. S. Bach
+M: C
+L: 1/16
+K: C
+Q: 1/4=80
+|z EAc BEBd c2e2^G2e2 | AEAc BEBd c2A2 z4 |
+z ece AcEG F2A2d2f3 | dBd GBDF E2G2c2e3 | cAc F2d3 BGB E2c3 |
+AFA D2B2 c8 |
+
+X: 2
+T: Invention 13 (LH)
+C: J. S. Bach
+M: C
+L: 1/16
+K: C
+Q: 1/4=80
+| A,,2 A,4 ^G,2 A,E,A,C B,E,B,D | C2A,2^G,2E,2 A,E,A,C B,E,B,D |
+C2A,2C2A,2 DA,F,A, D,F,A,,C, | B,,2D,2G,2B,3 G,E,G, C,E,G,,B,, |
+A,,2C,2 D,F,B,,D, G,,2B,,2 C,E,A,,C, |
+F,,2D,,2 G,,G,F,G, C,8 |

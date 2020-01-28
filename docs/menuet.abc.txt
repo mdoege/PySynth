@@ -1,0 +1,9 @@
+X: 1
+T: Menuet in G (BWV Anh. 114)
+C: J. S. Bach
+M: 3/4
+L: 1/8
+K: G
+Q: 1/4=130
+|: d2 GABc | d2 G2 G2 | e2 cdef | g2 G2 G2 | c2 dcBA |
+B2 cBAG |1 F2 GABG | A2 D,CB,A, :|2 A2 BAGF | G3 |

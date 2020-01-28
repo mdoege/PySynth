@@ -1,0 +1,56 @@
+#MIDI file: popcorn.mid
+#Format: 1  Tracks: 10  Divisions: 120
+##Track name: Bass 1
+##Track name: Drums
+##Track name: Synth Bass
+  #    Track name: Melody 2
+   #   Track name: High Note
+##Track name: Popcorn
+##Track name: Organ
+##Track name: Arpeggio
+##Track name: End Part
+#(Popcorn by Hot Butter)
+
+
+#BASS
+
+python readmidi.py popcorn.mid   1 p1.wav --syn_c
+
+
+#MELODY
+
+python readmidi.py popcorn.mid   6 p6.wav --syn_d
+
+
+#DRUMS
+
+python readmidi.py popcorn.mid   2 p2.wav --syn_p
+
+#BASS
+
+python readmidi.py popcorn.mid   3 p3.wav --syn_c
+
+
+#ORGAN
+
+python readmidi.py popcorn.mid   7 p7.wav --syn_e
+
+#ARPS
+
+python readmidi.py popcorn.mid   8 p8.wav --syn_s
+
+#END
+
+python readmidi.py popcorn.mid   9 p9.wav --syn_s
+
+
+
+#MELODY 2
+
+python readmidi.py popcorn.mid  4 p4.wav --syn_a
+
+#HIGH NOTE
+
+python readmidi.py popcorn.mid  5 p5.wav --syn_d
+
+

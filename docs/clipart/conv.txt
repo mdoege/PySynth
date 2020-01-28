@@ -1,0 +1,13 @@
+
+# ClipArt 25k Vol 2
+
+# https://archive.org/details/Clipart25k2
+
+
+#inkscape -f ENAB001K.WMF -z -l 0.svg
+
+
+for i in *WMF; do inkscape -f $i -z -l $i.svg  ; done
+
+
+

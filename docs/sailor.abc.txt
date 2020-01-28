@@ -1,0 +1,11 @@
+X:1
+T:Sailor's Hornpipe
+C:Traditional
+M:4/4
+L:1/8
+Q:1/8=470
+K:G
+gf|:g2G2 G2dc|Bdg2 g2fg|a2A2 A2ag|f2d2 d2ef|
+gfed edcB|cBAG AGFE|DGFA GBAc|1 B2G2 G2gf:|2 B2G2 G2dc|
+|:Bdgd Bdgd|e2c2 c2ed|^ceae ceae|f2d2 d2ef|
+gfed edcB|cBAG AGFE|DGFA GBAc|1 B2G2 G2dc:|2 B2G2 G4|

@@ -1,0 +1,10 @@
+
+python readmidi.py Tron_Son_of_Flynn.mid   0  s1.wav --syn_e
+
+python readmidi.py Tron_Son_of_Flynn.mid   1  s2.wav --syn_samp
+
+python readmidi.py Tron_Son_of_Flynn.mid   2  s3.wav --syn_samp
+
+python readmidi.py Tron_Son_of_Flynn.mid   3  s4.wav --syn_c
+
+

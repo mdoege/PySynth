@@ -1,0 +1,25 @@
+
+
+python readmidi.py who.mid  0 w1.wav --syn_e
+
+python readmidi.py who.mid  1 w2.wav --syn_e
+
+
+
+python readmidi.py who.mid  4 w4.wav --syn_b
+
+
+python readmidi.py who.mid  6 w6.wav --syn_b
+
+
+
+
+python readmidi.py who.mid  7 w7.wav --syn_s
+
+
+python readmidi.py who.mid  8 w8.wav --syn_p
+
+
+python readmidi.py who.mid  9 w9.wav --syn_p
+
+

@@ -1,0 +1,11 @@
+
+python readmidi.py Tron.mid   1 tron1.wav --syn_e
+
+# fixed track with some notes removed in MuseScore 2:
+python readmidi.py Tron2.mid   1 tron2.wav --syn_e
+
+python readmidi.py Tron.mid   3 tron3.wav --syn_s
+
+python readmidi.py Tron.mid   4 tron4.wav --syn_s
+
+

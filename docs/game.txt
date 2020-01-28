@@ -1,0 +1,9 @@
+
+
+python readmidi.py The_Game_Is_On_C_Major.mid   0 g1.wav --syn_samp
+
+python readmidi.py The_Game_Is_On_C_Major.mid   1 g2.wav --syn_samp
+
+python readmidi.py The_Game_Is_On_C_Major.mid   2 g3.wav --syn_samp
+
+
