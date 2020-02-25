@@ -2,9 +2,7 @@
 
 PySynth is no longer being actively developed by me and has therefore been removed from PyPI.
 
-If you would like to take over as maintainer of the project, please fork it now!
-
-This repo may be deleted in the future.
+**There is now a maintained fork of PySynth at [g4brielvs/PySynth](https://github.com/g4brielvs/PySynth).**
 
 ---
 
