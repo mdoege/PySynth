@@ -31,7 +31,7 @@ def getfreq(pr = False):
 	return pitchhz, keynum
 
 
-# construct filnames for Salamander piano samples
+# construct filenames for Salamander piano samples
 
 sampfn = {}
 facs = 1, 2**(1/12), 2**(2/12)
