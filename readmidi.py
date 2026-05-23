@@ -252,6 +252,8 @@ if __name__ == "__main__":
 		import pysynth_c as pysynth
 	elif "--syn_d" in sys.argv:
 		import pysynth_d as pysynth
+	elif "--syn_f" in sys.argv:
+		import pysynth_f as pysynth
 	elif "--syn_p" in sys.argv:
 		import pysynth_p as pysynth
 	elif "--syn_samp" in sys.argv:

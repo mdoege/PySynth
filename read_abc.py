@@ -5,7 +5,7 @@ Parse a file in ABC music notation format and render with PySynth.
 
 Usage:
 
-read_abc.py filename [num_song] [--syn_b/--syn_c/--syn_d/--syn_e/--syn_p/--syn_s/--syn_samp]
+read_abc.py filename [num_song] [--syn_b/--syn_c/--syn_d/--syn_e/--syn_f/--syn_p/--syn_s/--syn_samp]
 
 * num_song selects the song in the file corresponding to the number given
 * --syn_b and --syn_s can be added to use the PySynth B or PySynth S
@@ -37,6 +37,8 @@ elif "--syn_c" in sys.argv:
 	import pysynth_c as pysynth
 elif "--syn_d" in sys.argv:
 	import pysynth_d as pysynth
+elif "--syn_f" in sys.argv:
+	import pysynth_f as pysynth
 elif "--syn_p" in sys.argv:
 	import pysynth_p as pysynth
 elif "--syn_samp" in sys.argv:
