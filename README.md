@@ -21,6 +21,7 @@ The current release of the synthesizer can only play one note at a time. (Althou
 | C | subtractive (sawtooth wave) | bowed string, analog synth pad | none | no
 | D | subtractive (square wave) | woodwind, analog synth lead | none | no
 | E | FM/phase modulation (6 sine waves) | DX7 Rhodes piano | medium | yes
+| F | subtractive (triangle wave) | flute, single reed | none | no
 | P | subtractive (white noise) | untuned percussion hit | very fast | no
 | S | Karplus-Strong (physical modeling) | plucked string, guitar, koto | fast | yes
 | beeper | additive | Nokia phone ringtone | none | no
