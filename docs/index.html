@@ -296,6 +296,8 @@ hr:after {  /* Not really supposed to work, but does */
 
 <p>PySynth C is a simple bowed string sound based on subtractive synthesis. It uses a sawtooth oscillator and a low-pass filter, similar to a 1970s analog synth (or a string sound in <a href="http://amsynth.github.io/">amsynth</a>, or a sound from a <a href="https://en.wikipedia.org/wiki/MOS_Technology_SID">MOS Technology SID</a>). Like PySynth A, it only requires Python itself to run.</p>
 
+<p>The filter used by the C, D, F, and P modules is also the easiest one to implement in a program: an infinite-impulse-response (IIR) single-pole <a href="https://en.wikipedia.org/wiki/Low-pass_filter">low-pass filter</a>.</p>
+
 <h3>PySynth &ldquo;D&rdquo;</h3>
 
 <p>PySynth D uses subtractive synthesis like PySynth C, but is based on a square wave instead. This synth lead-type sound is reminiscent of a woodwind. Square waves were also used in 1970s/1980s computer sound chips such as the <a href="https://en.wikipedia.org/wiki/General_Instrument_AY-3-8910">General Instrument AY-3-8910</a> or the <a href="https://en.wikipedia.org/wiki/POKEY">Atari POKEY</a>. Only Python itself is required.</p>
