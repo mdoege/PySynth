@@ -27,6 +27,8 @@ The current release of the synthesizer can only play one note at a time. (Althou
 | beeper | additive | Nokia phone ringtone | none | no
 | samp | sampler | [Salamander Grand Piano][3] | medium | yes
 
+Now there is also midi_synth.py, a simple monophonic synthesizer which can e.g. be played from a MIDI keyboard, unlike the other synthesizer scripts. It sounds roughly like PySynth A and requires [pyaudio](https://people.csail.mit.edu/hubert/pyaudio/) and [mido](https://github.com/mido/mido).
+
 ## Installation
 
 ### Linux
