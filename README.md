@@ -27,14 +27,14 @@ The current release of the synthesizer can only play one note at a time. (Althou
 | beeper | additive | Nokia phone ringtone | none | no
 | samp | sampler | [Salamander Grand Piano][3] | medium | yes
 
-### MIDI synthesizers
+### Real-time MIDI synthesizers
 
-Now there are also two synthesizers which can be played interactively, e.g. from a MIDI keyboard or other MIDI source:
+Now there are also two synthesizers which can be played in real-time, e.g. from a MIDI keyboard or other MIDI source:
 
+* multi_synth.py: a polyphonic synthesizer with eight-note polyphony by default
 * midi_synth.py: a simple monophonic synthesizer
-* multi_synth.py: a polyphonic synthesizer with eight-note polyphony
 
-Both synths sound roughly like PySynth A and require [pyaudio](https://people.csail.mit.edu/hubert/pyaudio/) and [mido](https://github.com/mido/mido).
+Both synths sound more or less like PySynth A and require [pyaudio](https://people.csail.mit.edu/hubert/pyaudio/) and [mido](https://github.com/mido/mido).
 
 ## Installation
 
