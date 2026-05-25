@@ -1,11 +1,3 @@
-## Current project status
-
-PySynth is no longer being actively developed by me and has therefore been removed from PyPI.
-
-**There is now a maintained fork of PySynth at [g4brielvs/PySynth](https://github.com/g4brielvs/PySynth).**
-
----
-
 ## Overview
 
 PySynth is a simple music synthesizer for Python 2 or 3. The goal is not to produce many different sounds, but to have scripts that can turn ABC notation or MIDI files into a WAV file without too much tinkering.
@@ -27,7 +19,7 @@ The current release of the synthesizer can only play one note at a time. (Althou
 | beeper | additive | Nokia phone ringtone | none | no
 | samp | sampler | [Salamander Grand Piano][3] | medium | yes
 
-### Real-time MIDI synthesizers
+## Live MIDI synthesizers
 
 Now there are also two synthesizers which can be played in real-time, e.g. from a MIDI keyboard or other MIDI source:
 
