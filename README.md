@@ -26,7 +26,7 @@ Now there are also two synthesizers which can be played in real-time, e.g. from 
 * multi_synth.py: a polyphonic synthesizer with eight-note polyphony by default
 * midi_synth.py: a simple monophonic synthesizer
 
-Both synths sound more or less like PySynth A and require [pyaudio](https://people.csail.mit.edu/hubert/pyaudio/) and [mido](https://github.com/mido/mido).
+Both synths sound similar to PySynth A or B and require [pyaudio](https://people.csail.mit.edu/hubert/pyaudio/) and [mido](https://github.com/mido/mido).
 
 ## Installation
 
