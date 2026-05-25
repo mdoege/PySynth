@@ -41,7 +41,7 @@ or
 
 Enter the directory (`cd PySynth`) and run 
 
-`python3 setup.py install`
+`python -m pip install .`
 
 ## Sample usage
 
