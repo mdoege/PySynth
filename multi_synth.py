@@ -28,8 +28,6 @@ notes = []
 
 # callback function for audio data
 def callback(in_data, frame_count, time_info, status):
-    global xpos, amp
-
     data = b""
     for i in range(frame_count):
         v = 0
