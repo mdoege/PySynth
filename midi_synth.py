@@ -67,7 +67,10 @@ while True:
             if msg.note == last_note:
                 freq = 0
                 last_note = 0
-    time.sleep(SLEEP)
+    try:
+        time.sleep(SLEEP)
+    except:
+        break
 
 stream.close()
 paud.terminate()

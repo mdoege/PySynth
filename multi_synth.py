@@ -71,7 +71,10 @@ while True:
                 notes = notes[-MAXPOLY:]
             #print(notes)
 
-    time.sleep(SLEEP)
+    try:
+        time.sleep(SLEEP)
+    except:
+        break
 
 stream.close()
 paud.terminate()
