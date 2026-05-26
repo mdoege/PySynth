@@ -59,7 +59,7 @@ while True:
             lossfac = 50000 - 49000 * ((a_sel - a_min) / (a_max - a_min))
             lossfac *= ARATE / 44100
             amp_loss = 1 - 1 / lossfac
-            notes.append([0, freq, 1, amp_loss])
+            notes.append([0, freq, 1, amp_loss, msg.note])
 
             newnotes = []
             for n in notes:
@@ -70,6 +70,11 @@ while True:
             if len(notes) > MAXPOLY:
                 notes = notes[-MAXPOLY:]
             #print(notes)
+
+        if msg.type == "note_off":
+            for n in notes:
+                if n[4] == msg.note:
+                    n[3] = n[3]**6
 
     try:
         time.sleep(SLEEP)
