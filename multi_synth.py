@@ -35,14 +35,8 @@ def callback(in_data, frame_count, time_info, status):
     for i in range(frame_count):
         v = 0
         for n in notes:
-            lf_fac = (math.log(n[1]) - 3) / 4
-            if lf_fac > 1:
-                harm = 0
-            else:
-                harm = 2 * (1 - lf_fac)
-            v += n[2] * (math.sin(n[0]) + .5 * harm * math.sin(2 * n[0]) + .25 * harm * math.sin(4 * n[0]))
-            delt = 2 * math.pi / ARATE * n[1]
-            n[0] += delt
+            v += n[2] * (math.sin(n[0]) + .5 * n[5] * math.sin(2 * n[0]) + .25 * n[5] * math.sin(4 * n[0]))
+            n[0] += 2 * math.pi / ARATE * n[1]
             n[2] *= n[3]
         b = struct.pack('h', round(VOLUME * v))
         data += b
@@ -67,7 +61,14 @@ while True:
             lossfac = 50000 - 49000 * ((a_sel - a_min) / (a_max - a_min))
             lossfac *= ARATE / 44100
             amp_loss = 1 - 1 / lossfac
-            notes.append([0, freq, 1, amp_loss, msg.note])
+
+            lf_fac = (math.log(freq) - 3) / 4
+            if lf_fac > 1:
+                harm = 0
+            else:
+                harm = 2 * (1 - lf_fac)
+
+            notes.append([0, freq, 1, amp_loss, msg.note, harm])
 
             newnotes = []
             for n in notes:
