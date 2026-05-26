@@ -27,6 +27,7 @@ SUSTAIN = False
 
 ################################################################################
 
+# list of currently active notes
 notes = []
 
 # callback function for audio data
@@ -42,6 +43,7 @@ def callback(in_data, frame_count, time_info, status):
         data += b
     return data, pyaudio.paContinue
 
+# open mido and pyaudio inputs/outputs
 inport = mido.open_input()
 paud = pyaudio.PyAudio()
 stream = paud.open(format = paud.get_format_from_width(2),
@@ -51,35 +53,52 @@ stream = paud.open(format = paud.get_format_from_width(2),
                     frames_per_buffer = BSIZE,
                     stream_callback = callback)
 
-print("latency [s] = %.5f" % stream.get_output_latency())
+#print("latency [s] = %.5f" % stream.get_output_latency())
 
 while True:
     for msg in inport.iter_pending():
+        # process new note
         if msg.type == "note_on":
+            # get note frequency in Hz
             freq = 440 * 2**((msg.note - 69) / 12)
+
+            # get amplitude loss factor per sample
             a_min, a_max, a_sel = math.log(21), math.log(108), math.log(msg.note)
             lossfac = 50000 - 49000 * ((a_sel - a_min) / (a_max - a_min))
             lossfac *= ARATE / 44100
             amp_loss = 1 - 1 / lossfac
 
+            # get harmonic content factor (like PySynth A)
+            #   - strong harmonics in lower octaves
+            #   - no harmonics in higher octaves
             lf_fac = (math.log(freq) - 3) / 4
             if lf_fac > 1:
                 harm = 0
             else:
                 harm = 2 * (1 - lf_fac)
 
+            # append new note to list of active notes
+            #   note data:
+            #     * current oscillator phase
+            #     * frequency in Hz
+            #     * current amplitude
+            #     * amplitude loss factor
+            #     * MIDI key number
+            #     * harmonic content factor
             notes.append([0, freq, 1, amp_loss, msg.note, harm])
 
+            # remove notes that have gone almost silent
             newnotes = []
             for n in notes:
                 if n[2] > .001:
                     newnotes.append(n)
             notes = newnotes
 
+            # apply maximum polyphony cutoff with priority for latest notes
             if len(notes) > MAXPOLY:
                 notes = notes[-MAXPOLY:]
-            #print(notes)
 
+        # increase amplitude loss of note when note_off event happens
         if msg.type == "note_off" and not SUSTAIN:
             for n in notes:
                 if n[4] == msg.note:
@@ -87,7 +106,7 @@ while True:
 
     try:
         time.sleep(SLEEP)
-    except:
+    except:     # exception handler hides ugly backtrace when pressing Ctrl-C
         break
 
 stream.close()
