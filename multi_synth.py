@@ -35,7 +35,12 @@ def callback(in_data, frame_count, time_info, status):
     for i in range(frame_count):
         v = 0
         for n in notes:
-            v += n[2] * (math.sin(n[0]) + .5 * math.sin(2 * n[0]) + .25 * math.sin(4 * n[0]))
+            lf_fac = (math.log(n[1]) - 3) / 4
+            if lf_fac > 1:
+                harm = 0
+            else:
+                harm = 2 * (1 - lf_fac)
+            v += n[2] * (math.sin(n[0]) + .5 * harm * math.sin(2 * n[0]) + .25 * harm * math.sin(4 * n[0]))
             delt = 2 * math.pi / ARATE * n[1]
             n[0] += delt
             n[2] *= n[3]
