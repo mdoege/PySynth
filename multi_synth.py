@@ -22,6 +22,9 @@ MAXPOLY = 8
 # volume
 VOLUME = 3000
 
+# sustain notes?
+SUSTAIN = False
+
 ################################################################################
 
 notes = []
@@ -71,7 +74,7 @@ while True:
                 notes = notes[-MAXPOLY:]
             #print(notes)
 
-        if msg.type == "note_off":
+        if msg.type == "note_off" and not SUSTAIN:
             for n in notes:
                 if n[4] == msg.note:
                     n[3] = n[3]**6
