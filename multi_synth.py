@@ -39,7 +39,7 @@ def callback(in_data, frame_count, time_info, status):
             v += n[2] * (math.sin(n[0]) + .5 * n[5] * math.sin(2 * n[0]) + .25 * n[5] * math.sin(4 * n[0]))
             n[0] += 2 * math.pi / ARATE * n[1]
             n[2] *= n[3]
-        b = struct.pack('h', round(VOLUME * v))
+        b = struct.pack("h", round(VOLUME * v))
         data += b
     return data, pyaudio.paContinue
 
@@ -63,6 +63,7 @@ while True:
             freq = 440 * 2**((msg.note - 69) / 12)
 
             # get amplitude loss factor per sample
+            #   (higher frequencies decay more quickly)
             a_min, a_max, a_sel = math.log(21), math.log(108), math.log(msg.note)
             lossfac = 50000 - 49000 * ((a_sel - a_min) / (a_max - a_min))
             lossfac *= ARATE / 44100
