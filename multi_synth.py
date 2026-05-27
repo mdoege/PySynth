@@ -59,9 +59,7 @@ while True:
     for msg in inport.iter_pending():
         # process new note
         if msg.type == "note_on":
-            vel = msg.velocity
-
-            if vel == 0:
+            if msg.velocity == 0:
                 # turn note off (if velocity = 0)
                 if not SUSTAIN:
                     for n in notes:
