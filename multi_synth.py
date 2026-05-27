@@ -59,45 +59,54 @@ while True:
     for msg in inport.iter_pending():
         # process new note
         if msg.type == "note_on":
-            # get note frequency in Hz
-            freq = 440 * 2**((msg.note - 69) / 12)
+            vel = msg.velocity
 
-            # get amplitude loss factor per sample
-            #   (higher frequencies decay more quickly)
-            a_min, a_max, a_sel = math.log(21), math.log(108), math.log(msg.note)
-            lossfac = 50000 - 49000 * ((a_sel - a_min) / (a_max - a_min))
-            lossfac *= ARATE / 44100
-            amp_loss = 1 - 1 / lossfac
-
-            # get harmonic content factor (like PySynth A)
-            #   - strong harmonics in lower octaves
-            #   - no harmonics in higher octaves
-            lf_fac = (math.log(freq) - 3) / 4
-            if lf_fac > 1:
-                harm = 0
+            if vel == 0:
+                # turn note off (if velocity = 0)
+                if not SUSTAIN:
+                    for n in notes:
+                        if n[4] == msg.note:
+                            n[3] = n[3]**6
             else:
-                harm = 2 * (1 - lf_fac)
+                # get note frequency in Hz
+                freq = 440 * 2**((msg.note - 69) / 12)
 
-            # append new note to list of active notes
-            #   note data:
-            #     * current oscillator phase
-            #     * frequency in Hz
-            #     * current amplitude
-            #     * amplitude loss factor
-            #     * MIDI key number
-            #     * harmonic content factor
-            notes.append([0, freq, 1, amp_loss, msg.note, harm])
+                # get amplitude loss factor per sample
+                #   (higher frequencies decay more quickly)
+                a_min, a_max, a_sel = math.log(21), math.log(108), math.log(msg.note)
+                lossfac = 50000 - 49000 * ((a_sel - a_min) / (a_max - a_min))
+                lossfac *= ARATE / 44100
+                amp_loss = 1 - 1 / lossfac
 
-            # remove notes that have gone almost silent
-            newnotes = []
-            for n in notes:
-                if n[2] > .001:
-                    newnotes.append(n)
-            notes = newnotes
+                # get harmonic content factor (like PySynth A)
+                #   - strong harmonics in lower octaves
+                #   - no harmonics in higher octaves
+                lf_fac = (math.log(freq) - 3) / 4
+                if lf_fac > 1:
+                    harm = 0
+                else:
+                    harm = 2 * (1 - lf_fac)
 
-            # apply maximum polyphony cutoff with priority for latest notes
-            if len(notes) > MAXPOLY:
-                notes = notes[-MAXPOLY:]
+                # append new note to list of active notes
+                #   note data:
+                #     * current oscillator phase
+                #     * frequency in Hz
+                #     * current amplitude
+                #     * amplitude loss factor
+                #     * MIDI key number
+                #     * harmonic content factor
+                notes.append([0, freq, 1, amp_loss, msg.note, harm])
+
+                # remove notes that have gone almost silent
+                newnotes = []
+                for n in notes:
+                    if n[2] > .001:
+                        newnotes.append(n)
+                notes = newnotes
+
+                # apply maximum polyphony cutoff with priority for latest notes
+                if len(notes) > MAXPOLY:
+                    notes = notes[-MAXPOLY:]
 
         # increase amplitude loss of note when note_off event happens
         if msg.type == "note_off" and not SUSTAIN:
