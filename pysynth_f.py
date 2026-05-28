@@ -58,6 +58,23 @@ pitchhz, keynum = getfreq(pr = True)
 import wave, math, struct
 from mixfiles import mix_files
 
+# set up wavetable for triangle wave
+wt = []
+
+#   number of samples
+wave_l1 = 2048
+
+wave_l2 = wave_l1 // 2
+wave_l3 = wave_l1 // 4
+
+for i in range(wave_l1):
+	xt = (i - wave_l3) % wave_l1
+	if xt < wave_l2:
+		wtri = 1 - 2 * xt / wave_l2
+	else:
+		wtri = -1 + 2 * (xt - wave_l2) / wave_l2
+	wt.append(wtri)
+
 def make_wav(song,bpm=120,transpose=0,pause=.05,boost=1.1,repeat=0,fn="out.wav", silent=False):
 	f=wave.open(fn,'w')
 
@@ -84,22 +101,14 @@ def make_wav(song,bpm=120,transpose=0,pause=.05,boost=1.1,repeat=0,fn="out.wav",
 		l=waves2(a,b2)
 		ow=b''
 		q=int(l[0]*l[1])
-
-		osc = -1
-		oscstep = 4./l[0]
 		sp = 0
 		fade = 1
-		sign = 1
-		# triangle wave
 		for x in range(q):
 			if q - x < 100: fade = (q - x) / 100.
-			sp += (osc - sp) / 5
-			ow=ow+sixteenbit(fade * vol * sp * .8)
-			osc += sign * oscstep
-			if osc > 1 or osc < -1:
-				sign = -1
-			if osc < -1:
-				sign = 1
+			p = 2 * math.pi * x / 44100 * a
+			pind = int((p % (2 * math.pi)) / (2 * math.pi) * wave_l1)
+			sp += (wt[pind] - sp) / 5
+			ow=ow+sixteenbit(.8 * fade * vol * sp)
 		fill = max(int(ex_pos - curpos - q), 0)
 		f.writeframesraw((ow)+(sixteenbit(0)*fill))
 		return q + fill
