@@ -64,9 +64,6 @@ wt = []
 #   number of samples
 wave_l1 = 2048
 
-wave_l2 = wave_l1 // 2
-wave_l3 = wave_l1 // 4
-
 for i in range(wave_l1):
 	saw = -1 + 2 * (i / wave_l1)
 	wt.append(saw)
