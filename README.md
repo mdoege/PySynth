@@ -21,12 +21,13 @@ The current release of the synthesizer can only play one note at a time. (Althou
 
 ## Live MIDI synthesizers
 
-Now there are also two synthesizers which can be played in real-time, e.g. from a MIDI keyboard or other MIDI source:
+There are also three synthesizers which can be played in real-time, e.g. from a MIDI keyboard or other MIDI source. They all require [pyaudio](https://people.csail.mit.edu/hubert/pyaudio/) and [mido](https://github.com/mido/mido):
 
 * multi_synth.py: a polyphonic synthesizer with eight-note polyphony by default
+* multi_wave.py: a polyphonic wavetable synthesizer which uses a piano wavetable from Surge XT by default
 * midi_synth.py: a simple monophonic synthesizer
 
-Both synths sound similar to PySynth A or B and require [pyaudio](https://people.csail.mit.edu/hubert/pyaudio/) and [mido](https://github.com/mido/mido).
+Multi_synth.py and midi_synth.py sound similar to PySynth A or B.
 
 ## Installation
 
