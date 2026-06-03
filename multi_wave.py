@@ -35,8 +35,8 @@ fn = "/usr/share/surge-xt/wavetables_3rdparty/Emu VSCO/Keys/Upright Piano Medium
 # number of samples per waveform
 num_samp = 256
 
-# waveform change speed (lower = faster)
-wave_adv = 55000
+# waveform change speed
+wave_adv = 15
 
 wf = wave.open(fn)
 print(wf.getparams())
@@ -47,6 +47,7 @@ for j in range(num_wave):
     for i in range(num_samp):
         d = struct.unpack("h", wf.readframes(1))[0]
         wt.append(d)
+print("loaded", num_wave, "waveforms")
 
 # list of currently active notes
 notes = []
@@ -61,7 +62,7 @@ def callback(in_data, frame_count, time_info, status):
             v += n[2] * wt[pind + int(n[5]) * num_samp]
             n[0] += 2 * math.pi / ARATE * n[1]
             n[2] *= n[3]
-            n[5] += 2 * math.pi / ARATE / wave_adv
+            n[5] += 1 / ARATE * wave_adv
             n[5] = min(n[5], num_wave - 1)
         b = struct.pack("h", round(VOLUME * v))
         data += b
@@ -96,7 +97,7 @@ while True:
                 # get amplitude loss factor per sample
                 #   (higher frequencies decay more quickly)
                 a_min, a_max, a_sel = math.log(21), math.log(108), math.log(msg.note)
-                lossfac = 50000 - 49000 * ((a_sel - a_min) / (a_max - a_min))
+                lossfac = 50000 - 45000 * ((a_sel - a_min) / (a_max - a_min))
                 lossfac *= ARATE / 44100
                 amp_loss = 1 - 1 / lossfac
 
