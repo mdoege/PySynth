@@ -36,7 +36,7 @@ fn = "/usr/share/surge-xt/wavetables_3rdparty/Emu VSCO/Keys/Upright Piano Medium
 num_samp = 256
 
 # waveform change speed
-wave_adv = 15
+wave_adv = 5
 
 wf = wave.open(fn)
 print(wf.getparams())
@@ -59,11 +59,14 @@ def callback(in_data, frame_count, time_info, status):
         v = 0
         for n in notes:
             pind = int((n[0] % (2 * math.pi)) / (2 * math.pi) * num_samp)
-            v += n[2] * wt[pind + int(n[5]) * num_samp]
+            v1 = wt[pind + int(n[5]) * num_samp]
+            v2 = wt[pind + (int(n[5]) + 1) * num_samp]
+            fac = n[5] % 1
+            v += n[2] * ((1 - fac) * v1 + fac * v2)
             n[0] += 2 * math.pi / ARATE * n[1]
             n[2] *= n[3]
             n[5] += 1 / ARATE * wave_adv
-            n[5] = min(n[5], num_wave - 1)
+            n[5] = min(n[5], num_wave - 2)
         b = struct.pack("h", round(VOLUME * v))
         data += b
     return data, pyaudio.paContinue
