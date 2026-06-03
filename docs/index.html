@@ -343,6 +343,10 @@ hr:after {  /* Not really supposed to work, but does */
 
 <p>PySynth now has a new synthesizer that plays live and is polyphonic, with a piano-like timbre similar to &ldquo;A&rdquo; or &ldquo;B&rdquo;. MIDI input is required, in the form of MIDI events sent by another program or a hardware keyboard. Needs <a href="https://github.com/mido/mido">mido</a> and <a href="https://people.csail.mit.edu/hubert/pyaudio/">pyaudio</a>.</p>
 
+<h3>multi_wave.py</h3>
+
+<p>This is a wavetable synthesizer which uses a Surge XT piano wavetable by default (not included). It assumes that each waveform consists of 256 samples, which seems to be pretty standard for wavetables. When a note is played, the sound generator steps through the wavetable (with linear interpolation), with the parameter <tt>wave_adv</tt> controlling how quickly the waveform changes. The piano sound is pretty good in the lower octaves, but in the higher octaves it sounds more like a banjo.</p>
+
 <hr>
 
 <img src="clipart/ENBO002J.svg" width="320px" align="right">
