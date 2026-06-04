@@ -29,6 +29,8 @@ There are also three synthesizers which can be played in real-time, e.g. from a 
 
 Multi_synth.py and midi_synth.py use three sine waves like PySynth A and an exponential decay like PySynth B, so they sound very similar to PySynth A and B.
 
+There is also a helper script, midi_play.py, which can be used to send a MIDI file to these synthesizers.
+
 If you hear crackling audio from these scripts, you might want to
 
 * quit other applications, especially web browsers.
