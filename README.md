@@ -25,12 +25,13 @@ There are also three synthesizers which can be played in real-time, e.g. from a 
 
 * multi_synth.py: polyphonic additive synthesizer with 8-note polyphony by default
 * multi_wave.py: polyphonic wavetable synthesizer with 12-note polyphony by default
-* - make_wavetable.py: create a simple wavetable with 256 samples and 32 waveforms
 * midi_synth.py: simple monophonic additive synthesizer
 
 Multi_synth.py and midi_synth.py use three sine waves like PySynth A and an exponential decay like PySynth B, so they sound very similar to PySynth A and B.
 
 There is also a helper script, midi_play.py, which can be used to send a MIDI file to these synthesizers.
+
+The script make_wavetable.py creates a wavetable with 256 samples and 32 waveforms which is used by default.
 
 If you hear crackling audio from these scripts, you might want to
 
