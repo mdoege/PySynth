@@ -33,7 +33,7 @@ If you hear crackling audio from these scripts, you might want to
 
 * quit other applications, especially web browsers.
 * increase audio buffer size (<tt>BSIZE</tt>) in the scripts or reduce maximum polyphony (<tt>MAXPOLY</tt>).
-* make sure you are running a recent Python version, because Python tends to have improved performance with each release.
+* make sure you are running a recent Python version, because Python performance tends to improve with each release.
 
 ## Installation
 
