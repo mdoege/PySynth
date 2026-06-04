@@ -65,8 +65,12 @@ def callback(in_data, frame_count, time_info, status):
             v += n[2] * ((1 - fac) * v1 + fac * v2)
             n[0] += 2 * math.pi / ARATE * n[1]
             n[2] *= n[3]
-            n[5] += 1 / ARATE * wave_adv
-            n[5] = min(n[5], num_wave - 2)
+            n[5] += n[6]
+            #n[5] = min(n[5], num_wave - 2)
+            # fade out note when it has reached the end of the wavetable:
+            if n[5] > num_wave - 2:
+                n[5] = num_wave - 2
+                n[3] = .9999
         b = struct.pack("h", round(VOLUME * v))
         data += b
     return data, pyaudio.paContinue
@@ -92,27 +96,26 @@ while True:
                 if not SUSTAIN:
                     for n in notes:
                         if n[4] == msg.note:
-                            n[3] = n[3]**6
+                            n[3] = .9999
             else:
                 # get note frequency in Hz
                 freq = 440 * 2**((msg.note - 69) / 12)
 
-                # get amplitude loss factor per sample
-                #   (higher frequencies decay more quickly)
+                # get wavetable increment factor
+                #   (higher pitch = faster increment)
                 a_min, a_max, a_sel = math.log(21), math.log(108), math.log(msg.note)
-                lossfac = 50000 - 45000 * ((a_sel - a_min) / (a_max - a_min))
-                lossfac *= ARATE / 44100
-                amp_loss = 1 - 1 / lossfac
+                wav_inc = 1 + 15 * ((a_sel - a_min) / (a_max - a_min))
 
                 # append new note to list of active notes
                 #   note data:
-                #     * current oscillator phase
-                #     * frequency in Hz
-                #     * current amplitude
-                #     * amplitude loss factor
-                #     * MIDI key number
-                #     * current wavetable position
-                notes.append([0, freq, 1, amp_loss, msg.note, 0])
+                #   0  * current oscillator phase
+                #   1  * frequency in Hz
+                #   2  * current amplitude
+                #   3  * amplitude loss factor
+                #   4  * MIDI key number
+                #   5  * current wavetable position
+                #   6  * wavetable increment
+                notes.append([0, freq, 1, 1, msg.note, 0, 1 / ARATE * wave_adv * wav_inc])
 
                 # remove notes that have gone almost silent
                 newnotes = []
@@ -129,7 +132,7 @@ while True:
         if msg.type == "note_off" and not SUSTAIN:
             for n in notes:
                 if n[4] == msg.note:
-                    n[3] = n[3]**6
+                    n[3] = .9999
 
     try:
         time.sleep(SLEEP)
