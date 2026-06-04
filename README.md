@@ -29,6 +29,12 @@ There are also three synthesizers which can be played in real-time, e.g. from a 
 
 Multi_synth.py and midi_synth.py use three sine waves like PySynth A and an exponential decay like PySynth B, so they sound very similar to PySynth A and B.
 
+If you hear crackling audio from these scripts, you might want to
+
+* quit other applications, especially web browsers.
+* increase audio buffer size (<tt>BSIZE</tt>) in the scripts or reduce maximum polyphony (<tt>MAXPOLY</tt>).
+* make sure you are running a recent Python version, because Python tends to have improved performance with each release.
+
 ## Installation
 
 ### Linux
