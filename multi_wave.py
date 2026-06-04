@@ -11,13 +11,13 @@ SLEEP = .01
 
 # audio buffer size (determines latency)
 #      Increase this to e.g. 256 or 512 if there is crackling audio output.
-BSIZE = 128
+BSIZE = 256
 
 # sample rate
 ARATE = 44100
 
 # maximum polyphony
-MAXPOLY = 8
+MAXPOLY = 12
 
 # volume
 VOLUME = .2
@@ -49,6 +49,10 @@ for j in range(num_wave):
         wt.append(d)
 print("loaded", num_wave, "waveforms")
 
+# add padding so the interpolation works for the final wavetable entry
+for i in range(num_samp):
+    wt.append(0)
+
 # list of currently active notes
 notes = []
 
@@ -66,10 +70,9 @@ def callback(in_data, frame_count, time_info, status):
             n[0] += 2 * math.pi / ARATE * n[1]
             n[2] *= n[3]
             n[5] += n[6]
-            #n[5] = min(n[5], num_wave - 2)
             # fade out note when it has reached the end of the wavetable:
-            if n[5] > num_wave - 2:
-                n[5] = num_wave - 2
+            if n[5] > num_wave - 1:
+                n[5] = num_wave - 1
                 n[3] = .9999
         b = struct.pack("h", round(VOLUME * v))
         data += b
