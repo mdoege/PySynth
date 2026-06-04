@@ -30,7 +30,8 @@ SUSTAIN = False
 # read wavetable file
 
 # WAV file name
-fn = "/usr/share/surge-xt/wavetables_3rdparty/Emu VSCO/Keys/Upright Piano Medium.wav"
+#fn = "/usr/share/surge-xt/wavetables_3rdparty/Emu VSCO/Keys/Upright Piano Medium.wav"
+fn = "wavetable.wav"
 
 # number of samples per waveform
 num_samp = 256
