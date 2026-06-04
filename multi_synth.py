@@ -87,12 +87,12 @@ while True:
 
                 # append new note to list of active notes
                 #   note data:
-                #     * current oscillator phase
-                #     * frequency in Hz
-                #     * current amplitude
-                #     * amplitude loss factor
-                #     * MIDI key number
-                #     * harmonic content factor
+                #   0  * current oscillator phase
+                #   1  * frequency in Hz
+                #   2  * current amplitude
+                #   3  * amplitude loss factor
+                #   4  * MIDI key number
+                #   5  * harmonic content factor
                 notes.append([0, freq, 1, amp_loss, msg.note, harm])
 
                 # remove notes that have gone almost silent
