@@ -27,11 +27,17 @@ There are also three synthesizers which can be played in real-time, e.g. from a 
 * multi_wave.py: polyphonic wavetable synthesizer with 12-note polyphony by default
 * midi_synth.py: simple monophonic additive synthesizer
 
-Multi_synth.py and midi_synth.py use three sine waves like PySynth A and an exponential decay like PySynth B, so they sound very similar to PySynth A and B.
+The helper script midi_play.py can be used to play back a MIDI file to these synthesizers.
 
-There is also a helper script, midi_play.py, which can be used to send a MIDI file to these synthesizers.
+Multi_synth.py and midi_synth.py produce a piano-like timbre using three sine waves like PySynth A and an exponential decay like PySynth B, so they sound very similar to PySynth A and B. Multi_wave.py on the other hand loads a wavetable with a guitar-like sound by default.
 
-There are also some other wavetables for multi_wave.py in the <tt>wavetables</tt> directory. They can be loaded by uncommenting their respective lines in multi_wave.py. The scripts make_wavetable.py and pluck_filter.py are examples for how to create wavetables with 32 waveforms (256 samples each).
+### Wavetables
+
+The <tt>wavetables</tt> directory contains some other wavetables for multi_wave.py. They can be loaded by uncommenting their respective lines in multi_wave.py. The scripts make_wavetable.py and pluck_filter.py are examples for how to create wavetables with 32 waveforms (256 samples each).
+
+It is also possible to convert wavetables from other synthesizers. Often these are in 32-bit floating point format, so they need to be exported as 16-bit integer WAVs in Audacity. The number of samples per waveform needs to be set in multi_wave.py. Also, the volume should be set low enough so that multi_wave.py does not crash even when many notes are playing simultaneously.
+
+### Audio problems
 
 If you hear crackling audio from these scripts, you might want to
 
