@@ -31,7 +31,7 @@ Multi_synth.py and midi_synth.py use three sine waves like PySynth A and an expo
 
 There is also a helper script, midi_play.py, which can be used to send a MIDI file to these synthesizers.
 
-The script make_wavetable.py creates a wavetable with 256 samples and 32 waveforms which is used by multi_wave.py by default.
+There are also some other wavetables for multi_wave.py in the <tt>wavetables</tt> directory. They can be loaded by uncommenting their respective lines in multi_wave.py. The scripts make_wavetable.py and pluck_filter.py are examples for how to create wavetables with 32 waveforms (256 samples each).
 
 If you hear crackling audio from these scripts, you might want to
 

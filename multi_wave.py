@@ -31,10 +31,10 @@ SUSTAIN = False
 #   (Uncomment the line with the wavetable you want to load.)
 
 # 256x32 (mix of sine/sawtooth/square wave)
-fn, num_samp, volume = "wavetable.wav", 256, .5
+#fn, num_samp, volume = "wavetables/wavetable.wav", 256, .5
 
 # 256x32 (pluck sound with a closing low-pass filter)
-#fn, num_samp, volume = "wavetables/pluck_filter.wav", 256, .5
+fn, num_samp, volume = "wavetables/pluck_filter.wav", 256, .5
 
 # 2048x2 (morph between sawtooth and sine wave)
 #fn, num_samp, volume = "wavetables/sawsine.wav", 2048, .05
