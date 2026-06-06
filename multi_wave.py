@@ -19,9 +19,6 @@ ARATE = 44100
 # maximum polyphony
 MAXPOLY = 12
 
-# volume
-VOLUME = .2
-
 # sustain notes?
 SUSTAIN = False
 
@@ -29,15 +26,24 @@ SUSTAIN = False
 
 # read wavetable file
 
-# WAV file name
-#fn = "/usr/share/surge-xt/wavetables_3rdparty/Emu VSCO/Keys/Upright Piano Medium.wav"
-fn = "wavetable.wav"
+# WAV file name, number of samples per waveform, volume
 
-# number of samples per waveform
-num_samp = 256
+#   (Uncomment the line with the wavetable you want to load.)
+
+# 256x32 (mix of sine/sawtooth/square wave)
+fn, num_samp, volume = "wavetable.wav", 256, .5
+
+# 256x32 (pluck sound with a closing low-pass filter)
+#fn, num_samp, volume = "wavetables/pluck_filter.wav", 256, .5
+
+# 2048x2 (morph between sawtooth and sine wave)
+#fn, num_samp, volume = "wavetables/sawsine.wav", 2048, .05
+
+# 256x32 (piano sound from Surge XT)
+#fn, num_samp, volume = "/usr/share/surge-xt/wavetables_3rdparty/Emu VSCO/Keys/Upright Piano Medium.wav", 256, .2
 
 # waveform change speed
-wave_adv = 5
+wave_adv = .16
 
 wf = wave.open(fn)
 print(wf.getparams())
@@ -75,7 +81,7 @@ def callback(in_data, frame_count, time_info, status):
             if n[5] > num_wave - 1:
                 n[5] = num_wave - 1
                 n[3] = .9999
-        b = struct.pack("h", round(VOLUME * v))
+        b = struct.pack("h", round(volume * v))
         data += b
     return data, pyaudio.paContinue
 
@@ -108,7 +114,7 @@ while True:
                 # get wavetable increment factor
                 #   (higher pitch = faster increment)
                 a_min, a_max, a_sel = math.log(21), math.log(108), math.log(msg.note)
-                wav_inc = 1 + 15 * ((a_sel - a_min) / (a_max - a_min))
+                wav_inc_fac = 1 + 15 * ((a_sel - a_min) / (a_max - a_min))
 
                 # append new note to list of active notes
                 #   note data:
@@ -119,7 +125,10 @@ while True:
                 #   4  * MIDI key number
                 #   5  * current wavetable position
                 #   6  * wavetable increment
-                notes.append([0, freq, 1, 1, msg.note, 0, 1 / ARATE * wave_adv * wav_inc])
+                wav_inc = 1 / ARATE * wave_adv * wav_inc_fac
+                # scale wav_inc by wavetable length
+                wav_inc *= num_wave - 1
+                notes.append([0, freq, 1, 1, msg.note, 0, wav_inc])
 
                 # remove notes that have gone almost silent
                 newnotes = []
