@@ -58,7 +58,7 @@ print("latency [s] = %.5f" % stream.get_output_latency())
 
 while True:
     for msg in inport.iter_pending():
-        if msg.type == "note_on":
+        if msg.type == "note_on" and msg.velocity > 0:
             freq = 440 * 2 ** ((msg.note - 69) / 12)
             last_note = msg.note
             xpos = 0
@@ -67,7 +67,7 @@ while True:
             lossfac = 50000 - 49000 * ((a_sel - a_min) / (a_max - a_min))
             lossfac *= ARATE / 44100
             amp_loss = 1 - 1 / lossfac
-        if msg.type == "note_off":
+        if msg.type == "note_off" or (msg.type == "note_on" and msg.velocity == 0):
             if msg.note == last_note:
                 freq = 0
                 last_note = 0
