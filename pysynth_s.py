@@ -201,7 +201,7 @@ def make_wav(
     out_len = int(2.0 * 44100.0 + ex_pos + 0.5)
     data2 = np.zeros(out_len, np.short)
     data2[:] = 32000.0 * data[:out_len]
-    f.writeframes(data2.tostring())
+    f.writeframes(data2.tobytes())
     f.close()
     print()
 
