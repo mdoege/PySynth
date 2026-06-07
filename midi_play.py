@@ -30,4 +30,3 @@ for msg in mido.MidiFile(fn).play():
     if msg.type in allow:
         msg.note += TRANSPOSE
         out.send(msg)
-

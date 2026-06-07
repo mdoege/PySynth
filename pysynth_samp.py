@@ -65,30 +65,40 @@ patchpath = "/usr/share/sounds/SalamanderGrandPianoV3_48khz24bit/48khz24bit/"
 # e.g. boost = 1.2
 
 # Output file name
-#fn = 'pysynth_output.wav'
+# fn = 'pysynth_output.wav'
 
 ##########################################################################
 
-def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav", silent=False):
-    f=wave.open(fn,'w')
+
+def make_wav(
+    song,
+    bpm=120,
+    transpose=0,
+    leg_stac=0.9,
+    boost=1.1,
+    repeat=0,
+    fn="out.wav",
+    silent=False,
+):
+    f = wave.open(fn, "w")
 
     f.setnchannels(1)
     f.setsampwidth(2)
     f.setframerate(48000)
-    f.setcomptype('NONE','Not Compressed')
+    f.setcomptype("NONE", "Not Compressed")
 
-    bpmfac = 120./bpm
+    bpmfac = 120.0 / bpm
 
     def length(l):
-        return 96000./l*bpmfac
+        return 96000.0 / l * bpmfac
 
     def getval(v):
-        a = struct.unpack('i', v + b'\x00')[0] / 256 - 32768
+        a = struct.unpack("i", v + b"\x00")[0] / 256 - 32768
         if a > 0:
-            a =  1 - a / 32768
+            a = 1 - a / 32768
         else:
             a = -1 - a / 32768
-        return(a)
+        return a
 
     def render2(a, b, vol, pos, knum, note):
         snd_len = int(b)
@@ -99,9 +109,9 @@ def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav
         new = np.zeros(wl // 6)
 
         for x in range(wl // 6):
-            #left: getval( wd[6 * x:6 * x +3] )
-            #right: getval( wd[6 * x + 3:6 * x +6] )
-            new[x] = getval( wd[6 * x:6 * x +3] )
+            # left: getval( wd[6 * x:6 * x +3] )
+            # right: getval( wd[6 * x + 3:6 * x +6] )
+            new[x] = getval(wd[6 * x : 6 * x + 3])
 
         wf.close()
 
@@ -118,53 +128,53 @@ def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav
             new2 = new
         raw_note = len(new2)
 
-        dec_ind = int(leg_stac*b)
-        new2[dec_ind:] *= np.exp(-np.arange(raw_note-dec_ind)/3000.)
-        new2[-1001:] *= np.arange(1, -.001,-.001)
+        dec_ind = int(leg_stac * b)
+        new2[dec_ind:] *= np.exp(-np.arange(raw_note - dec_ind) / 3000.0)
+        new2[-1001:] *= np.arange(1, -0.001, -0.001)
         if snd_len > raw_note:
             print("Warning, note too long:", snd_len, raw_note)
             snd_len = raw_note
-        data[pos:pos+snd_len] += ( new2[:snd_len] * vol  )
+        data[pos : pos + snd_len] += new2[:snd_len] * vol
 
-    ex_pos = 0.
+    ex_pos = 0.0
     t_len = 0
     for y, x in song:
         if x < 0:
-            t_len+=length(-2.*x/3.)
+            t_len += length(-2.0 * x / 3.0)
         else:
-            t_len+=length(x)
-        if y[-1] == '*':
+            t_len += length(x)
+        if y[-1] == "*":
             y = y[:-1]
         if not y[-1].isdigit():
-            y += '4'
-    data = np.zeros(int((repeat+1)*t_len + 480000))
+            y += "4"
+    data = np.zeros(int((repeat + 1) * t_len + 480000))
 
-    for rp in range(repeat+1):
+    for rp in range(repeat + 1):
         for nn, x in enumerate(song):
             if not nn % 4 and silent == False:
-                print("[%u/%u]\t" % (nn+1,len(song)))
-            if x[0]!='r':
-                if x[0][-1] == '*':
+                print("[%u/%u]\t" % (nn + 1, len(song)))
+            if x[0] != "r":
+                if x[0][-1] == "*":
                     vol = boost
                     note = x[0][:-1]
                 else:
-                    vol = 1.
+                    vol = 1.0
                     note = x[0]
                 if not note[-1].isdigit():
-                    note += '4'        # default to fourth octave
-                a=pitchhz[note]
+                    note += "4"  # default to fourth octave
+                a = pitchhz[note]
                 kn = keynum[note]
                 a = a * 2**transpose
                 if x[1] < 0:
-                    b=length(-2.*x[1]/3.)
+                    b = length(-2.0 * x[1] / 3.0)
                 else:
-                    b=length(x[1])
+                    b = length(x[1])
 
                 render2(a, b, vol, int(ex_pos), kn, note)
                 ex_pos = ex_pos + b
 
-            if x[0]=='r':
-                b=length(x[1])
+            if x[0] == "r":
+                b = length(x[1])
                 ex_pos = ex_pos + b
 
     ##########################################################################
@@ -173,32 +183,35 @@ def make_wav(song,bpm=120,transpose=0,leg_stac=.9,boost=1.1,repeat=0,fn="out.wav
     if silent == False:
         print("Writing to file", fn)
 
-    data = data / (data.max() * 2.)
-    out_len = int(2. * 48000. + ex_pos+.5)
+    data = data / (data.max() * 2.0)
+    out_len = int(2.0 * 48000.0 + ex_pos + 0.5)
     data2 = np.zeros(out_len, np.short)
-    data2[:] = 32000. * data[:out_len]
+    data2[:] = 32000.0 * data[:out_len]
     f.writeframes(data2.tostring())
     f.close()
     print()
+
 
 ##########################################################################
 # Synthesize demo songs
 ##########################################################################
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print("*** SAMPLER ***")
     print()
     print("Creating Demo Songs... (this might take about a minute)")
     print()
 
-    #make_wav((('c', 4), ('e', 4), ('g', 4), ('c5', 1)))
-    make_wav(song1, fn = "pysynth_scale.wav")
-    #make_wav((('c1', 1), ('r', 1),('c2', 1), ('r', 1),('c3', 1), ('r', 1), ('c4', 1), ('r', 1),('c5', 1), ('r', 1),('c6', 1), ('r', 1),('c7', 1), ('r', 1),('c8', 1), ('r', 1), ('r', 1), ('r', 1), ('c4', 1),('r', 1), ('c4*', 1), ('r', 1), ('r', 1), ('r', 1), ('c4', 16), ('r', 1), ('c4', 8), ('r', 1),('c4', 4), ('r', 1),('c4', 1), ('r', 1),('c4', 1), ('r', 1)), fn = "all_cs.wav")
+    # make_wav((('c', 4), ('e', 4), ('g', 4), ('c5', 1)))
+    make_wav(song1, fn="pysynth_scale.wav")
+    # make_wav((('c1', 1), ('r', 1),('c2', 1), ('r', 1),('c3', 1), ('r', 1), ('c4', 1), ('r', 1),('c5', 1), ('r', 1),('c6', 1), ('r', 1),('c7', 1), ('r', 1),('c8', 1), ('r', 1), ('r', 1), ('r', 1), ('c4', 1),('r', 1), ('c4*', 1), ('r', 1), ('r', 1), ('r', 1), ('c4', 16), ('r', 1), ('c4', 8), ('r', 1),('c4', 4), ('r', 1),('c4', 1), ('r', 1),('c4', 1), ('r', 1)), fn = "all_cs.wav")
 
-    make_wav(song4_rh, bpm = 130, transpose = 1, boost = 1.15, repeat = 1, fn = "pysynth_bach_rh.wav")
-    make_wav(song4_lh, bpm = 130, transpose = 1, boost = 1.15, repeat = 1, fn = "pysynth_bach_lh.wav")
+    make_wav(
+        song4_rh, bpm=130, transpose=1, boost=1.15, repeat=1, fn="pysynth_bach_rh.wav"
+    )
+    make_wav(
+        song4_lh, bpm=130, transpose=1, boost=1.15, repeat=1, fn="pysynth_bach_lh.wav"
+    )
     mix_files("pysynth_bach_rh.wav", "pysynth_bach_lh.wav", "pysynth_bach.wav")
 
-    #make_wav(song3, bpm = 132/2, leg_stac = 0.9, boost = 1.1, fn = "pysynth_chopin.wav")
-
-
+    # make_wav(song3, bpm = 132/2, leg_stac = 0.9, boost = 1.1, fn = "pysynth_chopin.wav")

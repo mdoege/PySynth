@@ -40,38 +40,40 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import struct
 
+
 class Note(object):
     "Represents a single MIDI note"
-    
-    note_names = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
-    
-    def __init__(self, channel, pitch, velocity, start, duration = 0):
+
+    note_names = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"]
+
+    def __init__(self, channel, pitch, velocity, start, duration=0):
         self.channel = channel
         self.pitch = pitch
         self.velocity = velocity
         self.start = start
         self.duration = duration
-    
+
     def __str__(self):
         s = Note.note_names[(self.pitch - 9) % 12]
         s += str(self.pitch // 12 - 1)
         s += " " + str(self.velocity)
         s += " " + str(self.start) + " " + str(self.start + self.duration) + " "
         return s
-    
+
     def get_end(self):
         return self.start + self.duration
 
+
 class MidiFile(object):
     "Represents the notes in a MIDI file"
-    
+
     def read_byte(self, file):
-        return struct.unpack('B', file.read(1))[0]
-    
+        return struct.unpack("B", file.read(1))[0]
+
     def read_variable_length(self, file, counter):
         counter -= 1
         num = self.read_byte(file)
-        
+
         if num & 0x80:
             num = num & 0x7F
             while True:
@@ -80,20 +82,22 @@ class MidiFile(object):
                 num = (num << 7) + (c & 0x7F)
                 if not (c & 0x80):
                     break
-        
+
         return (num, counter)
-    
+
     def __init__(self, file_name):
         self.tempo = 120
         try:
-            file = open(file_name, 'rb')
-            if file.read(4) != b'MThd': raise Exception('Not a MIDI file')
+            file = open(file_name, "rb")
+            if file.read(4) != b"MThd":
+                raise Exception("Not a MIDI file")
             self.file_name = file_name
-            size = struct.unpack('>i', file.read(4))[0]
-            if size != 6: raise Exception('Unusual MIDI file with non-6 sized header')
-            self.format = struct.unpack('>h', file.read(2))[0]
-            self.track_count = struct.unpack('>h', file.read(2))[0]
-            self.time_division = struct.unpack('>h', file.read(2))[0]
+            size = struct.unpack(">i", file.read(4))[0]
+            if size != 6:
+                raise Exception("Unusual MIDI file with non-6 sized header")
+            self.format = struct.unpack(">h", file.read(2))[0]
+            self.track_count = struct.unpack(">h", file.read(2))[0]
+            self.time_division = struct.unpack(">h", file.read(2))[0]
 
             # Now to fill out the arrays with the notes
             self.tracks = []
@@ -101,10 +105,11 @@ class MidiFile(object):
                 self.tracks.append([])
 
             for nn, track in enumerate(self.tracks):
-                abs_time = 0.
+                abs_time = 0.0
 
-                if file.read(4) != b'MTrk': raise Exception('Not a valid track')
-                size = struct.unpack('>i', file.read(4))[0]
+                if file.read(4) != b"MTrk":
+                    raise Exception("Not a valid track")
+                size = struct.unpack(">i", file.read(4))[0]
 
                 # To keep track of running status
                 last_flag = None
@@ -120,12 +125,13 @@ class MidiFile(object):
                         # print "Sysex"
                         while True:
                             size -= 1
-                            if self.read_byte(file) == 0xF7: break
+                            if self.read_byte(file) == 0xF7:
+                                break
                     # Meta messages
                     elif flag == 0xFF:
                         size -= 1
                         type = self.read_byte(file)
-                        if type == 0x2F:    # end of track event
+                        if type == 0x2F:  # end of track event
                             self.read_byte(file)
                             size -= 1
                             break
@@ -134,9 +140,9 @@ class MidiFile(object):
                         message = file.read(length)
                         # if type not in [0x0, 0x7, 0x20, 0x2F, 0x51, 0x54, 0x58, 0x59, 0x7F]:
                         print(length, message)
-                        if type == 0x51:    # qpm/bpm
+                        if type == 0x51:  # qpm/bpm
                             # http://www.recordingblogs.com/sa/Wiki?topic=MIDI+Set+Tempo+meta+message
-                            self.tempo = 6e7 / struct.unpack('>i', b'\x00' + message)[0]
+                            self.tempo = 6e7 / struct.unpack(">i", b"\x00" + message)[0]
                             print("tempo =", self.tempo, "bpm")
                     # MIDI messages
                     else:
@@ -148,14 +154,14 @@ class MidiFile(object):
                         else:
                             type_and_channel = last_flag
                             param1 = flag
-                        type = ((type_and_channel & 0xF0) >> 4)
+                        type = (type_and_channel & 0xF0) >> 4
                         channel = type_and_channel & 0xF
-                        if type == 0xC:    # detect MIDI program change
+                        if type == 0xC:  # detect MIDI program change
                             print("program change, channel", channel, "=", param1)
                             continue
                         size -= 1
                         param2 = self.read_byte(file)
-                        
+
                         # detect MIDI ons and MIDI offs
                         if type == 0x9:
                             track.append(Note(channel, param1, param2, abs_time))
@@ -169,21 +175,24 @@ class MidiFile(object):
             print("Cannot parse MIDI file: " + str(e))
         finally:
             file.close()
-    
+
     def __str__(self):
         s = ""
         for i, track in enumerate(self.tracks):
-            s += "Track " + str(i+1) + "\n"
+            s += "Track " + str(i + 1) + "\n"
             for note in track:
                 s += str(note) + "\n"
         return s
+
 
 def getdur(a, b):
     "Calculate note length for PySynth"
     return 4 / (b - a)
 
+
 if __name__ == "__main__":
     import sys
+
     m = MidiFile(sys.argv[1])
     if len(sys.argv) > 2:
         tracknum = int(sys.argv[2])
@@ -218,25 +227,29 @@ if __name__ == "__main__":
         nn = str(n).split()
         start, stop = float(nn[2]), float(nn[3])
 
-        if start != stop:    # note ends because of NOTE OFF event
+        if start != stop:  # note ends because of NOTE OFF event
             if start - gettotal() > 0:
-                song.append(('r', getdur(gettotal(), start)))
+                song.append(("r", getdur(gettotal(), start)))
                 print("r1")
             song.append((nn[0].lower(), getdur(start, stop)))
-        elif float(nn[1]) == 0 and notes.get(nn[0].lower(), -1) >= 0: # note ends because of NOTE ON with velocity = 0
+        elif (
+            float(nn[1]) == 0 and notes.get(nn[0].lower(), -1) >= 0
+        ):  # note ends because of NOTE ON with velocity = 0
             if notes[nn[0].lower()] - gettotal() > 0:
-                song.append(('r', getdur(gettotal(), notes[nn[0].lower()])))
+                song.append(("r", getdur(gettotal(), notes[nn[0].lower()])))
                 print("r2")
             song.append((nn[0].lower(), getdur(notes[nn[0].lower()], start)))
             notes[nn[0].lower()] = -1
-        elif float(nn[1]) > 0 and notes.get(nn[0].lower(), -1) == -1: # note ends because of new note
+        elif (
+            float(nn[1]) > 0 and notes.get(nn[0].lower(), -1) == -1
+        ):  # note ends because of new note
             old = getnote(notes)
             if old != None:
                 if notes[old] != start:
                     song.append((old, getdur(notes[old], start)))
                 notes[old] = -1
             elif start - gettotal() > 0:
-                song.append(('r', getdur(gettotal(), start)))
+                song.append(("r", getdur(gettotal(), start)))
                 print("r3")
             notes[nn[0].lower()] = start
     print()
@@ -260,5 +273,4 @@ if __name__ == "__main__":
         import pysynth_samp as pysynth
     else:
         import pysynth
-    pysynth.make_wav(song, fn = filename, bpm = m.tempo)
-
+    pysynth.make_wav(song, fn=filename, bpm=m.tempo)

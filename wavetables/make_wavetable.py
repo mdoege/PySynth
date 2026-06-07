@@ -14,11 +14,11 @@ num_samp = 256
 # number of waveforms
 num_wave = 32
 
-f = wave.open(fn, 'w')
+f = wave.open(fn, "w")
 f.setnchannels(1)
 f.setsampwidth(2)
 f.setframerate(44100)
-f.setcomptype('NONE', 'Not Compressed')
+f.setcomptype("NONE", "Not Compressed")
 
 for j in range(num_wave):
     for i in range(num_samp):
@@ -29,14 +29,12 @@ for j in range(num_wave):
 
         # add some square wave too
         if i > num_samp // 2:
-            w -= .25
+            w -= 0.25
 
         # decrease amplitude based on position in wavetable
         w = w / sqrt(j + 1)
 
-        f.writeframesraw(struct.pack('h', round(10000 * w)))
+        f.writeframesraw(struct.pack("h", round(10000 * w)))
 
-f.writeframes(b'')
+f.writeframes(b"")
 f.close()
-
-

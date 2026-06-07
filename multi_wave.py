@@ -7,7 +7,7 @@ import mido
 import struct, math, time, wave
 
 # sleep time in main loop
-SLEEP = .01
+SLEEP = 0.01
 
 # audio buffer size (determines latency)
 #      Increase this to e.g. 256 or 512 if there is crackling audio output.
@@ -31,19 +31,19 @@ SUSTAIN = False
 #   (Uncomment the line with the wavetable you want to load.)
 
 # 256x32 (mix of sine/sawtooth/square wave)
-#fn, num_samp, volume = "wavetables/wavetable.wav", 256, .5
+# fn, num_samp, volume = "wavetables/wavetable.wav", 256, .5
 
 # 256x32 (pluck sound with a closing low-pass filter)
-fn, num_samp, volume = "wavetables/pluck_filter.wav", 256, .5
+fn, num_samp, volume = "wavetables/pluck_filter.wav", 256, 0.5
 
 # 2048x2 (morph between sawtooth and sine wave)
-#fn, num_samp, volume = "wavetables/sawsine.wav", 2048, .05
+# fn, num_samp, volume = "wavetables/sawsine.wav", 2048, .05
 
 # 256x32 (piano sound from Surge XT)
-#fn, num_samp, volume = "/usr/share/surge-xt/wavetables_3rdparty/Emu VSCO/Keys/Upright Piano Medium.wav", 256, .2
+# fn, num_samp, volume = "/usr/share/surge-xt/wavetables_3rdparty/Emu VSCO/Keys/Upright Piano Medium.wav", 256, .2
 
 # waveform change speed
-wave_adv = .16
+wave_adv = 0.16
 
 wf = wave.open(fn)
 print(wf.getparams())
@@ -63,6 +63,7 @@ for i in range(num_samp):
 # list of currently active notes
 notes = []
 
+
 # callback function for audio data
 def callback(in_data, frame_count, time_info, status):
     data = b""
@@ -80,22 +81,25 @@ def callback(in_data, frame_count, time_info, status):
             # fade out note when it has reached the end of the wavetable:
             if n[5] > num_wave - 1:
                 n[5] = num_wave - 1
-                n[3] = .9999
+                n[3] = 0.9999
         b = struct.pack("h", round(volume * v))
         data += b
     return data, pyaudio.paContinue
 
+
 # open mido and pyaudio inputs/outputs
 inport = mido.open_input()
 paud = pyaudio.PyAudio()
-stream = paud.open(format = paud.get_format_from_width(2),
-                    channels = 1,
-                    rate = ARATE,
-                    output = True,
-                    frames_per_buffer = BSIZE,
-                    stream_callback = callback)
+stream = paud.open(
+    format=paud.get_format_from_width(2),
+    channels=1,
+    rate=ARATE,
+    output=True,
+    frames_per_buffer=BSIZE,
+    stream_callback=callback,
+)
 
-#print("latency [s] = %.5f" % stream.get_output_latency())
+# print("latency [s] = %.5f" % stream.get_output_latency())
 
 while True:
     for msg in inport.iter_pending():
@@ -106,10 +110,10 @@ while True:
                 if not SUSTAIN:
                     for n in notes:
                         if n[4] == msg.note:
-                            n[3] = .9999
+                            n[3] = 0.9999
             else:
                 # get note frequency in Hz
-                freq = 440 * 2**((msg.note - 69) / 12)
+                freq = 440 * 2 ** ((msg.note - 69) / 12)
 
                 # get wavetable increment factor
                 #   (higher pitch = faster increment)
@@ -133,7 +137,7 @@ while True:
                 # remove notes that have gone almost silent
                 newnotes = []
                 for n in notes:
-                    if n[2] > .001:
+                    if n[2] > 0.001:
                         newnotes.append(n)
                 notes = newnotes
 
@@ -145,14 +149,13 @@ while True:
         if msg.type == "note_off" and not SUSTAIN:
             for n in notes:
                 if n[4] == msg.note:
-                    n[3] = .9999
+                    n[3] = 0.9999
 
     try:
         time.sleep(SLEEP)
-    except:     # exception handler hides ugly backtrace when pressing Ctrl-C
+    except:  # exception handler hides ugly backtrace when pressing Ctrl-C
         break
 
 stream.close()
 paud.terminate()
 inport.close()
-

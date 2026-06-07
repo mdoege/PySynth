@@ -7,7 +7,7 @@ import mido
 import struct, math, time
 
 # sleep time in main loop
-SLEEP = .01
+SLEEP = 0.01
 
 # audio buffer size (determines latency)
 #      Increase this to e.g. 256 or 512 if there is crackling audio output.
@@ -24,6 +24,7 @@ freq = 0
 amp = 0
 amp_loss = 0
 
+
 # callback function for audio data
 def callback(in_data, frame_count, time_info, status):
     global xpos, amp
@@ -32,30 +33,33 @@ def callback(in_data, frame_count, time_info, status):
     delt = 2 * math.pi / ARATE * freq
     for i in range(frame_count):
         if freq > 0:
-            v = math.sin(xpos) + .5 * math.sin(2 * xpos) + .25 * math.sin(4 * xpos)
-            b = struct.pack('h', round(18000 * amp * v))
+            v = math.sin(xpos) + 0.5 * math.sin(2 * xpos) + 0.25 * math.sin(4 * xpos)
+            b = struct.pack("h", round(18000 * amp * v))
             xpos += delt
             amp *= amp_loss
         else:
-            b = struct.pack('h', 0)
+            b = struct.pack("h", 0)
         data += b
     return data, pyaudio.paContinue
 
+
 inport = mido.open_input()
 paud = pyaudio.PyAudio()
-stream = paud.open(format = paud.get_format_from_width(2),
-                    channels = 1,
-                    rate = ARATE,
-                    output = True,
-                    frames_per_buffer = BSIZE,
-                    stream_callback = callback)
+stream = paud.open(
+    format=paud.get_format_from_width(2),
+    channels=1,
+    rate=ARATE,
+    output=True,
+    frames_per_buffer=BSIZE,
+    stream_callback=callback,
+)
 
 print("latency [s] = %.5f" % stream.get_output_latency())
 
 while True:
     for msg in inport.iter_pending():
         if msg.type == "note_on":
-            freq = 440 * 2**((msg.note - 69) / 12)
+            freq = 440 * 2 ** ((msg.note - 69) / 12)
             last_note = msg.note
             xpos = 0
             amp = 1
@@ -75,4 +79,3 @@ while True:
 stream.close()
 paud.terminate()
 inport.close()
-
