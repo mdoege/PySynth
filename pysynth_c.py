@@ -65,113 +65,113 @@ wt = []
 wave_l1 = 2048
 
 for i in range(wave_l1):
-	saw = -1 + 2 * (i / wave_l1)
-	wt.append(saw)
+    saw = -1 + 2 * (i / wave_l1)
+    wt.append(saw)
 
 def make_wav(song,bpm=120,transpose=0,pause=.05,boost=1.1,repeat=0,fn="out.wav", silent=False):
-	f=wave.open(fn,'w')
+    f=wave.open(fn,'w')
 
-	f.setnchannels(1)
-	f.setsampwidth(2)
-	f.setframerate(44100)
-	f.setcomptype('NONE','Not Compressed')
+    f.setnchannels(1)
+    f.setsampwidth(2)
+    f.setframerate(44100)
+    f.setcomptype('NONE','Not Compressed')
 
-	bpmfac = 120./bpm
+    bpmfac = 120./bpm
 
-	def length(l):
-		return 88200./l*bpmfac
+    def length(l):
+        return 88200./l*bpmfac
 
-	def waves2(hz,l):
-		a=44100./hz
-		b=float(l)/44100.*hz
-		return [a,round(b)]
+    def waves2(hz,l):
+        a=44100./hz
+        b=float(l)/44100.*hz
+        return [a,round(b)]
 
-	def sixteenbit(x):
-		return struct.pack('h', round(32000*x))
+    def sixteenbit(x):
+        return struct.pack('h', round(32000*x))
 
-	def render2(a,b,vol):
-		b2 = (1.-pause)*b
-		l=waves2(a,b2)
-		ow=b''
-		q=int(l[0]*l[1])
-		sp = 0
-		fade = 1
-		for x in range(q):
-			if q - x < 100: fade = (q - x) / 100.
-			p = 2 * math.pi * x / 44100 * a
-			pind = int((p % (2 * math.pi)) / (2 * math.pi) * wave_l1)
-			sp += (wt[pind] - sp) / 100
-			ow=ow+sixteenbit(.8 * fade * vol * sp)
-		fill = max(int(ex_pos - curpos - q), 0)
-		f.writeframesraw((ow)+(sixteenbit(0)*fill))
-		return q + fill
+    def render2(a,b,vol):
+        b2 = (1.-pause)*b
+        l=waves2(a,b2)
+        ow=b''
+        q=int(l[0]*l[1])
+        sp = 0
+        fade = 1
+        for x in range(q):
+            if q - x < 100: fade = (q - x) / 100.
+            p = 2 * math.pi * x / 44100 * a
+            pind = int((p % (2 * math.pi)) / (2 * math.pi) * wave_l1)
+            sp += (wt[pind] - sp) / 100
+            ow=ow+sixteenbit(.8 * fade * vol * sp)
+        fill = max(int(ex_pos - curpos - q), 0)
+        f.writeframesraw((ow)+(sixteenbit(0)*fill))
+        return q + fill
 
-	##########################################################################
-	# Write to output file (in WAV format)
-	##########################################################################
+    ##########################################################################
+    # Write to output file (in WAV format)
+    ##########################################################################
 
-	if silent == False:
-		print("Writing to file", fn)
-	curpos = 0
-	ex_pos = 0.
-	for rp in range(repeat+1):
-		for nn, x in enumerate(song):
-			if not nn % 4 and silent == False:
-				print("[%u/%u]\t" % (nn+1,len(song)))
-			if x[0]!='r':
-				if x[0][-1] == '*':
-					vol = boost
-					note = x[0][:-1]
-				else:
-					vol = 1.
-					note = x[0]
-				try:
-					a=pitchhz[note]
-				except:
-					a=pitchhz[note + '4']	# default to fourth octave
-				a = a * 2**transpose
-				if x[1] < 0:
-					b=length(-2.*x[1]/3.)
-				else:
-					b=length(x[1])
-				ex_pos = ex_pos + b
-				curpos = curpos + render2(a,b,vol)
+    if silent == False:
+        print("Writing to file", fn)
+    curpos = 0
+    ex_pos = 0.
+    for rp in range(repeat+1):
+        for nn, x in enumerate(song):
+            if not nn % 4 and silent == False:
+                print("[%u/%u]\t" % (nn+1,len(song)))
+            if x[0]!='r':
+                if x[0][-1] == '*':
+                    vol = boost
+                    note = x[0][:-1]
+                else:
+                    vol = 1.
+                    note = x[0]
+                try:
+                    a=pitchhz[note]
+                except:
+                    a=pitchhz[note + '4']    # default to fourth octave
+                a = a * 2**transpose
+                if x[1] < 0:
+                    b=length(-2.*x[1]/3.)
+                else:
+                    b=length(x[1])
+                ex_pos = ex_pos + b
+                curpos = curpos + render2(a,b,vol)
 
-			if x[0]=='r':
-				b=length(x[1])
-				ex_pos = ex_pos + b
-				f.writeframesraw(sixteenbit(0)*int(b))
-				curpos = curpos + int(b)
+            if x[0]=='r':
+                b=length(x[1])
+                ex_pos = ex_pos + b
+                f.writeframesraw(sixteenbit(0)*int(b))
+                curpos = curpos + int(b)
 
-	f.writeframes(b'')
-	f.close()
-	print()
+    f.writeframes(b'')
+    f.close()
+    print()
 
 ##########################################################################
 # Synthesize demo songs
 ##########################################################################
 
 if __name__ == '__main__':
-	print()
-	print("Creating Demo Songs... (this might take about a minute)")
-	print()
+    print()
+    print("Creating Demo Songs... (this might take about a minute)")
+    print()
 
-	make_wav(  (('c4', 1), ('g4', 1), ('c5', 1)   ), fn = "zara.wav")
+    make_wav(  (('c4', 1), ('g4', 1), ('c5', 1)   ), fn = "zara.wav")
 
-	# SONG 1
-	make_wav(song1, fn = "pysynth_scale.wav")
+    # SONG 1
+    make_wav(song1, fn = "pysynth_scale.wav")
 
-	# SONG 2
-	make_wav(song2, bpm = 95, boost = 1.2, fn = "pysynth_anthem.wav")
+    # SONG 2
+    make_wav(song2, bpm = 95, boost = 1.2, fn = "pysynth_anthem.wav")
 
-	# SONG 3
-	make_wav(song3, bpm = 132/2, pause = 0., boost = 1.1, fn = "pysynth_chopin.wav")
+    # SONG 3
+    make_wav(song3, bpm = 132/2, pause = 0., boost = 1.1, fn = "pysynth_chopin.wav")
 
-	# SONG 4
-	#   right hand part
-	make_wav(song4_rh, bpm = 130, transpose = 1, pause = .1, boost = 1.15, repeat = 1, fn = "pysynth_bach_rh.wav")
-	#   left hand part
-	make_wav(song4_lh, bpm = 130, transpose = 1, pause = .1, boost = 1.15, repeat = 1, fn = "pysynth_bach_lh.wav")
-	#   mix both files together
-	mix_files("pysynth_bach_rh.wav", "pysynth_bach_lh.wav", "pysynth_bach.wav")
+    # SONG 4
+    #   right hand part
+    make_wav(song4_rh, bpm = 130, transpose = 1, pause = .1, boost = 1.15, repeat = 1, fn = "pysynth_bach_rh.wav")
+    #   left hand part
+    make_wav(song4_lh, bpm = 130, transpose = 1, pause = .1, boost = 1.15, repeat = 1, fn = "pysynth_bach_lh.wav")
+    #   mix both files together
+    mix_files("pysynth_bach_rh.wav", "pysynth_bach_lh.wav", "pysynth_bach.wav")
 
