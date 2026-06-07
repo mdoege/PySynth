@@ -39,19 +39,6 @@ from mkfreq import getfreq
 
 pitchhz, keynum = getfreq()
 
-# Harmonic intensities (dB) for selected piano keys,
-# measured with output from a Yamaha P-85
-harmo = (
-    (1, -15.8, -3.0, -15.3, -22.8, -40.7),
-    (16, -15.8, -3.0, -15.3, -22.8, -40.7),
-    (28, -5.7, -4.4, -17.7, -16.0, -38.7),
-    (40, -6.8, -17.2, -22.4, -16.8, -75.6),
-    (52, -8.4, -19.7, -23.5, -21.6, -76.8),
-    (64, -9.3, -20.8, -37.2, -36.3, -76.4),
-    (76, -18.0, -64.5, -74.4, -77.3, -80.8),
-    (88, -24.8, -53.8, -77.2, -80.8, -90.0),
-)
-
 
 def linint(arr, x):
     "Interpolate an (X, Y) array linearly."
@@ -76,22 +63,6 @@ def linint(arr, x):
     # print lx, ly, ux, uy
     return (float(x) - lx) / (ux - lx) * (uy - ly) + ly
 
-
-harmtab = np.zeros((88, 20))
-
-for h in range(1, len(harmo[0])):
-    dat = []
-    for n in range(len(harmo)):
-        dat.append((float(harmo[n][0]), harmo[n][h]))
-    for h2 in range(88):
-        harmtab[h2, h] = linint(dat, h2 + 1)
-
-# print harmtab[keynum['c4'],:]
-for h2 in range(88):
-    for n in range(20):
-        ref = harmtab[h2, 1]
-        harmtab[h2, n] = 10.0 ** ((harmtab[h2, n] - ref) / 20.0)
-# print harmtab[keynum['c4'],:]
 
 ##########################################################################
 #### Main program starts below
@@ -154,38 +125,6 @@ def make_wav(
         b = float(l) / 44100.0 * hz
         return [a, round(b)]
 
-    att_len = 3000
-    att_bass = np.zeros(att_len)
-    att_treb = np.zeros(att_len)
-    for n in range(att_len):
-        att_treb[n] = linint(
-            (
-                (0, 0.0),
-                (100, 0.2),
-                (300, 0.7),
-                (400, 0.6),
-                (600, 0.25),
-                (800, 0.9),
-                (1000, 1.25),
-                (2000, 1.15),
-                (3000, 1.0),
-            ),
-            n,
-        )
-        att_bass[n] = linint(
-            (
-                (0, 0.0),
-                (100, 0.1),
-                (300, 0.2),
-                (400, 0.15),
-                (600, 0.1),
-                (800, 0.9),
-                (1000, 1.25),
-                (2000, 1.15),
-                (3000, 1.0),
-            ),
-            n,
-        )
     decay = np.zeros(1000)
     for n in range(900):
         decay[n] = exp(
