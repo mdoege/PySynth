@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from unittest import TestCase
 
 from nokiacomposer2wav import parse_ringtone as p
