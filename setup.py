@@ -35,6 +35,5 @@ setup(
         "multi_synth.py",
         "multi_wave.py",
         "midi_play.py",
-        "make_wavetable.py",
     ],
 )
