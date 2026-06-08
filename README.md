@@ -33,7 +33,7 @@ Multi_synth.py and midi_synth.py produce a piano-like timbre using three sine wa
 
 ### Wavetables
 
-The <tt>wavetables</tt> directory contains some other wavetables for multi_wave.py. They can be loaded by uncommenting their respective lines in multi_wave.py. The scripts make_wavetable.py and pluck_filter.py are examples for how to create wavetables with 32 waveforms (256 samples each).
+The <tt>wavetables</tt> directory contains some other wavetables for multi_wave.py. They can be loaded by uncommenting their respective lines in multi_wave.py. There also some Python scripts in that directory that demonstrate how to create wavetables.
 
 It is also possible to convert wavetables from other synthesizers. Often these are in 32-bit floating point format, so they need to be exported as 16-bit integer WAVs in Audacity. The number of samples per waveform needs to be set in multi_wave.py. Also, the volume should be set low enough so that multi_wave.py does not crash even when many notes are playing simultaneously.
 
