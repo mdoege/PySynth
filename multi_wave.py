@@ -41,6 +41,10 @@ fn, num_samp, volume, is_pad = "wavetables/pluck_filter.wav", 256, 0.5, False
 # 256x64 (PWM string pad sound)
 # fn, num_samp, volume, is_pad = "wavetables/pwm_string.wav", 256, 0.5, True
 
+# ?x? (DECtalk speech output)
+# Try this with different sample lengths, such as 64/128/256/512/1024.
+# fn, num_samp, volume, is_pad = "wavetables/speech.wav", 128, 0.5, False
+
 # 2048x2 (morph between sawtooth and sine wave)
 # fn, num_samp, volume, is_pad = "wavetables/sawsine.wav", 2048, .05, False
 
