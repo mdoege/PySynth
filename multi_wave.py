@@ -19,31 +19,39 @@ ARATE = 44100
 # maximum polyphony
 MAXPOLY = 12
 
-# sustain notes?
-SUSTAIN = False
+# fade in and out parameters
+FADE_NORMAL = 0.9999
+FADE_PAD = 0.99995
+FADEIN_PAD = 30000
 
 ################################################################################
 
 # read wavetable file
 
-# WAV file name, number of samples per waveform, volume
+# WAV file name, number of samples per waveform, volume, pad/sustained sound?
 
 #   (Uncomment the line with the wavetable you want to load.)
 
 # 256x32 (mix of sine/sawtooth/square wave)
-# fn, num_samp, volume = "wavetables/wavetable.wav", 256, .5
+# fn, num_samp, volume, is_pad = "wavetables/wavetable.wav", 256, .5, False
 
 # 256x32 (pluck sound with a closing low-pass filter)
-fn, num_samp, volume = "wavetables/pluck_filter.wav", 256, 0.5
+fn, num_samp, volume, is_pad = "wavetables/pluck_filter.wav", 256, 0.5, False
+
+# 256x64 (PWM string pad sound)
+# fn, num_samp, volume, is_pad = "wavetables/pwm_string.wav", 256, 0.5, True
 
 # 2048x2 (morph between sawtooth and sine wave)
-# fn, num_samp, volume = "wavetables/sawsine.wav", 2048, .05
+# fn, num_samp, volume, is_pad = "wavetables/sawsine.wav", 2048, .05, False
 
 # 256x32 (piano sound from Surge XT)
-# fn, num_samp, volume = "/usr/share/surge-xt/wavetables_3rdparty/Emu VSCO/Keys/Upright Piano Medium.wav", 256, .2
+# fn, num_samp, volume, is_pad = "/usr/share/surge-xt/wavetables_3rdparty/Emu VSCO/Keys/Upright Piano Medium.wav", 256, .2, False
 
 # waveform change speed
-wave_adv = 0.16
+if not is_pad:
+    wave_adv = 0.16
+else:
+    wave_adv = 0.5
 
 wf = wave.open(fn)
 print(wf.getparams())
@@ -78,10 +86,17 @@ def callback(in_data, frame_count, time_info, status):
             n[0] += 2 * math.pi / ARATE * n[1]
             n[2] *= n[3]
             n[5] += n[6]
-            # fade out note when it has reached the end of the wavetable:
             if n[5] > num_wave - 1:
-                n[5] = num_wave - 1
-                n[3] = 0.9999
+                # fade out note when it has reached the end of the wavetable
+                if not is_pad:
+                    n[5] = num_wave - 1
+                    n[3] = FADE_NORMAL
+                # reset pad sound
+                else:
+                    n[5] = 0
+            # slowly fade in new pad sounds
+            if is_pad and n[3] == 1:
+                n[2] += (1 - n[2]) / FADEIN_PAD
         b = struct.pack("h", round(volume * v))
         data += b
     return data, pyaudio.paContinue
@@ -107,18 +122,23 @@ while True:
         if msg.type == "note_on":
             if msg.velocity == 0:
                 # turn note off (if velocity = 0)
-                if not SUSTAIN:
-                    for n in notes:
-                        if n[4] == msg.note:
-                            n[3] = 0.9999
+                for n in notes:
+                    if n[4] == msg.note:
+                        if not is_pad:
+                            n[3] = FADE_NORMAL
+                        else:
+                            n[3] = FADE_PAD
             else:
                 # get note frequency in Hz
                 freq = 440 * 2 ** ((msg.note - 69) / 12)
 
                 # get wavetable increment factor
-                #   (higher pitch = faster increment)
+                #   (higher pitch = faster increment, for non-pad sounds)
                 a_min, a_max, a_sel = math.log(21), math.log(108), math.log(msg.note)
-                wav_inc_fac = 1 + 15 * ((a_sel - a_min) / (a_max - a_min))
+                if not is_pad:
+                    wav_inc_fac = 1 + 15 * ((a_sel - a_min) / (a_max - a_min))
+                else:
+                    wav_inc_fac = 1
 
                 # append new note to list of active notes
                 #   note data:
@@ -132,7 +152,11 @@ while True:
                 wav_inc = 1 / ARATE * wave_adv * wav_inc_fac
                 # scale wav_inc by wavetable length
                 wav_inc *= num_wave - 1
-                notes.append([0, freq, 1, 1, msg.note, 0, wav_inc])
+                # normal sounds start at full amplitude; pad sounds at low amplitude
+                if not is_pad:
+                    notes.append([0, freq, 1, 1, msg.note, 0, wav_inc])
+                else:
+                    notes.append([0, freq, 0.01, 1, msg.note, 0, wav_inc])
 
                 # remove notes that have gone almost silent
                 newnotes = []
@@ -146,10 +170,13 @@ while True:
                     notes = notes[-MAXPOLY:]
 
         # increase amplitude loss of note when note_off event happens
-        if msg.type == "note_off" and not SUSTAIN:
+        if msg.type == "note_off":
             for n in notes:
                 if n[4] == msg.note:
-                    n[3] = 0.9999
+                    if not is_pad:
+                        n[3] = FADE_NORMAL
+                    else:
+                        n[3] = FADE_PAD
 
     try:
         time.sleep(SLEEP)
