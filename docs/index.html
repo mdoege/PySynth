@@ -350,9 +350,9 @@ hr:after {  /* Not really supposed to work, but does */
 
 <h3>multi_wave.py</h3>
 
-<p>This is a wavetable synthesizer which needs a 16-bit integer wavetable, e.g. from Surge XT (if <tt>num_samp</tt> is changed accordingly; there is no auto-detection of wavetable length). The script <tt>make_wavetable.py</tt> produces the simple wavetable which is used by default.</p>
+<p>This is a wavetable synthesizer which expects a 16-bit integer wavetable. There is no auto-detection of the number of samples per waveform, so this value has to be set in the code for each wavetable. An integer commandline argument selects from the built-in presets.</p>
 
-<p>By default, this synth assumes that each waveform consists of 256 samples, which seems to be pretty standard for wavetables. When a note is played, the sound generator steps through the wavetable from beginning to end (with linear interpolation), with the parameter <tt>wave_adv</tt> controlling how quickly the waveform changes. When the end of the wavetable is reached, the note fades out. Higher pitches progress more quickly through the wavetable, so they have a shorter duration.</p>
+<p>When a note is played, the sound generator steps through the wavetable from beginning to end (with linear interpolation), with the parameter <tt>wave_adv</tt> controlling how quickly the waveform changes. When the end of the wavetable is reached, the note fades out (unless it is a pad sound). Higher pitches progress more quickly through the wavetable, so they have a shorter duration.</p>
 
 <hr>
 

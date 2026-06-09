@@ -4,7 +4,7 @@
 
 import pyaudio
 import mido
-import struct, math, time, wave
+import sys, struct, math, time, wave
 
 # sleep time in main loop
 SLEEP = 0.01
@@ -28,28 +28,53 @@ FADEIN_PAD = 30000
 
 # read wavetable file
 
-# WAV file name, number of samples per waveform, volume, pad/sustained sound?
+# description, WAV file name, samples per waveform, volume, [ pad/sustained sound? ]
 
-#   (Uncomment the line with the wavetable you want to load.)
+presets = [
+    # 256x32 (pluck sound with a closing low-pass filter)
+    ("pluck", "wavetables/pluck_filter.wav", 256, 0.5),
 
-# 256x32 (mix of sine/sawtooth/square wave)
-# fn, num_samp, volume, is_pad = "wavetables/wavetable.wav", 256, .5, False
+    # 256x64 (PWM string pad sound)
+    ("strings", "wavetables/pwm_string.wav", 256, 0.5, True),
 
-# 256x32 (pluck sound with a closing low-pass filter)
-fn, num_samp, volume, is_pad = "wavetables/pluck_filter.wav", 256, 0.5, False
+    # 256x32 (mix of sine/sawtooth/square wave)
+    ("wave mix", "wavetables/wavetable.wav", 256, .5),
 
-# 256x64 (PWM string pad sound)
-# fn, num_samp, volume, is_pad = "wavetables/pwm_string.wav", 256, 0.5, True
+    # 2048x31 (Fairlight CMI sound from Groove Synthesis 3rd Wave; lowest octave)
+    ("Fairlight", "wavetables/fairlight_mode1_riser.wav", 2048, 0.5),
 
-# ?x? (DECtalk speech output)
-# Try this with different sample lengths, such as 64/128/256/512/1024.
-# fn, num_samp, volume, is_pad = "wavetables/speech.wav", 128, 0.5, False
+    # 256x32 (piano sound from Surge XT)
+    ("piano", "wavetables/upright_piano_medium.wav", 256, .2),
 
-# 2048x2 (morph between sawtooth and sine wave)
-# fn, num_samp, volume, is_pad = "wavetables/sawsine.wav", 2048, .05, False
+    # 2048x2 (morph between sawtooth and sine wave from VAST Vaporizer2)
+    ("saw2sine", "wavetables/sawsine.wav", 2048, .05),
 
-# 256x32 (piano sound from Surge XT)
-# fn, num_samp, volume, is_pad = "/usr/share/surge-xt/wavetables_3rdparty/Emu VSCO/Keys/Upright Piano Medium.wav", 256, .2, False
+    # ?x? (DECtalk speech output)
+    # Try this with different sample lengths, such as 64/128/256/512/1024.
+    ("DECtalk", "wavetables/speech.wav", 128, 0.5),
+]
+
+# print and select presets based on commandline argument
+
+try:
+    sel_pres = int(sys.argv[1])
+except:
+    sel_pres = 0
+
+print(80 * "=")
+print("Available presets (select with preset number as commandline argument):")
+print(80 * "-")
+for i in range(len(presets)):
+    if i == sel_pres:
+        print("*" ,i, presets[i][0])
+        if len(presets[i]) == 4:
+            descr, fn, num_samp, volume = presets[i]
+            is_pad = False
+        else:
+            descr, fn, num_samp, volume, is_pad = presets[i]
+    else:
+        print(" ", i, presets[i][0])
+print(80 * "=")
 
 # waveform change speed
 if not is_pad:
@@ -66,7 +91,7 @@ for j in range(num_wave):
     for i in range(num_samp):
         d = struct.unpack("h", wf.readframes(1))[0]
         wt.append(d)
-print("loaded", num_wave, "waveforms")
+print("*** loaded", num_wave, "waveforms ***")
 
 # add padding so the interpolation works for the final wavetable entry
 for i in range(num_samp):
