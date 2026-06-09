@@ -31,9 +31,5 @@ setup(
         "nokiacomposer2wav.py",
         "test_nokiacomposer2wav.py",
         "menv.py",
-        "midi_synth.py",
-        "multi_synth.py",
-        "multi_wave.py",
-        "midi_play.py",
     ],
 )
