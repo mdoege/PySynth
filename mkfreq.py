@@ -10,7 +10,7 @@ pitchhz, keynum = {}, {}
 keys_s = ("a", "a#", "b", "c", "c#", "d", "d#", "e", "f", "f#", "g", "g#")
 keys_sf = ("a", "bb", "cb", "b#", "db", "d", "eb", "fb", "e#", "gb", "g", "ab")
 
-# Romance note names
+# Romance-language note names
 keys_doremi_s = ("la", "la#", "si", "do", "do#", "re", "re#", "mi", "fa", "fa#", "sol", "sol#")
 keys_doremi_f = ("la", "sib", "si", "do", "reb", "re", "mib", "mi", "fa", "solb", "sol", "lab")
 
