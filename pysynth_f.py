@@ -32,7 +32,7 @@ from __future__ import division
 from demosongs import *
 from mkfreq import getfreq
 
-pitchhz, keynum = getfreq(pr=True)
+pitchhz, keynum = getfreq()
 
 ##########################################################################
 #### Main program starts below
