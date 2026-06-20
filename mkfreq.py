@@ -29,6 +29,8 @@ def getfreq(pr=False):
             note = "%s%u" % (keys[k % 12], oct)
             pitchhz[note] = freq
             keynum[note] = k
+            pitchhz[note.upper()] = freq
+            keynum[note.upper()] = k
 
             # print English note names with sharp accidentals
             if i == 0 and pr:
