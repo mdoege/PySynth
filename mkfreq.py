@@ -56,3 +56,6 @@ def getfn(layer):
 # x = getfn()
 # for a in x:
 #    print(a, x[a])
+
+if __name__ == "__main__":
+    p, k = getfreq(pr=True)
