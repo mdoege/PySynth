@@ -275,6 +275,8 @@ hr:after {  /* Not really supposed to work, but does */
 
 <p>Added <tt>pysynth_f.py</tt> (triangle waves) and improved the pitch accuracy of <tt>pysynth_c.py</tt> by basing <b>C</b> (like <b>F</b>) on wavetable oscillators.</p>
 
+<p>Note names (computed in <tt>mkfreq.py</tt>) can now also be in uppercase or in solfeggio (i.e. do&ndash;re&ndash;mi with fixed do).</p>
+
 <p>The three real-time MIDI synths <tt>midi_synth.py</tt>, <tt>multi_synth.py</tt>, and <tt>multi_wave.py</tt> (monophonic/polyphonic live MIDI synthesizers that require <a href="https://github.com/mido/mido">mido</a> and <a href="https://people.csail.mit.edu/hubert/pyaudio/">pyaudio</a>) were first developed here but now reside in their own repository: <a href="https://github.com/mdoege/PyWave">PyWave</a>.</p>
 
 <p>The NumPy-based synths (<b>B/E/S/samp</b>) were broken because they used an outdated NumPy method (<tt>tostring</tt>) that no longer exists in current versions of NumPy. That problem has been fixed.</p>
