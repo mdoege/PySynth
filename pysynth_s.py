@@ -39,31 +39,6 @@ from mkfreq import getfreq
 
 pitchhz, keynum = getfreq()
 
-
-def linint(arr, x):
-    "Interpolate an (X, Y) array linearly."
-    for v in arr:
-        if v[0] == x:
-            return v[1]
-    xvals = [v[0] for v in arr]
-    ux = max(xvals)
-    lx = min(xvals)
-    try:
-        assert lx <= x <= ux
-    except:
-        # print lx, x, ux
-        raise
-    for v in arr:
-        if v[0] > x and v[0] - x <= ux - x:
-            ux = v[0]
-            uy = v[1]
-        if v[0] < x and x - v[0] >= lx - x:
-            lx = v[0]
-            ly = v[1]
-    # print lx, ly, ux, uy
-    return (float(x) - lx) / (ux - lx) * (uy - ly) + ly
-
-
 ##########################################################################
 #### Main program starts below
 ##########################################################################
